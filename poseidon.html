@@ -14,7 +14,7 @@
             background: #000;
         }
 
-        /* ── SCENE ENTER — plunge from surface, eyes adjust to the dark ── */
+        /* ── SCENE ENTER ── */
         .scene {
             position: relative;
             width: 100vw; height: 100vh;
@@ -26,35 +26,23 @@
             to   { filter: brightness(1)   blur(0)    saturate(1); transform: scale(1); }
         }
 
-        /* ── ABYSS BACKGROUND — near-total darkness, ancient deep ── */
+        /* ── ABYSS BACKGROUND ── */
         .abyss-bg {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: linear-gradient(
                 to bottom,
-                #000000  0%,
-                #000306  18%,
-                #00080f  34%,
-                #000d1a  52%,
-                #001228  68%,
-                #001530  82%,
-                #000e22  100%
+                #000000  0%, #000306 18%, #00080f 34%, #000d1a 52%,
+                #001228 68%, #001530 82%, #000e22 100%
             );
         }
 
-        /* ── ABYSS GLOW — something ancient pulses far below ── */
+        /* ── ABYSS GLOW ── */
         .abyss-glow {
-            position: absolute;
-            bottom: -10%;
-            left: 50%;
+            position: absolute; bottom: -10%; left: 50%;
             transform: translateX(-50%);
-            width: 80%;
-            height: 60%;
+            width: 80%; height: 60%;
             background: radial-gradient(ellipse at 50% 100%,
-                rgba(0,55,75,0.50) 0%,
-                rgba(0,30,50,0.22) 45%,
-                transparent 75%
-            );
+                rgba(0,55,75,0.50) 0%, rgba(0,30,50,0.22) 45%, transparent 75%);
             animation: abyssPulse 7s ease-in-out infinite alternate;
             pointer-events: none;
         }
@@ -63,44 +51,22 @@
             to   { opacity: 1;   transform: translateX(-50%) scaleX(1.1); }
         }
 
-        /* ── DEEP SHADOWS — vast shapes in the dark ── */
+        /* ── DEEP SHAPES ── */
         .deep-shape {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
+            position: absolute; border-radius: 50%; pointer-events: none;
             animation: shapeDrift ease-in-out infinite alternate;
         }
-        .deep-shape:nth-child(1) {
-            width: 55vw; height: 35vh;
-            background: radial-gradient(ellipse, rgba(0,35,55,0.22), transparent);
-            filter: blur(50px);
-            top: 15%; left: -10%;
-            animation-duration: 28s;
-        }
-        .deep-shape:nth-child(2) {
-            width: 45vw; height: 28vh;
-            background: radial-gradient(ellipse, rgba(0,25,45,0.18), transparent);
-            filter: blur(60px);
-            top: 55%; right: -8%;
-            animation-duration: 34s; animation-delay: 6s;
-        }
-        .deep-shape:nth-child(3) {
-            width: 38vw; height: 40vh;
-            background: radial-gradient(ellipse, rgba(0,40,60,0.16), transparent);
-            filter: blur(45px);
-            top: 30%; left: 35%;
-            animation-duration: 22s; animation-delay: 3s;
-        }
+        .deep-shape:nth-child(1) { width:55vw; height:35vh; background:radial-gradient(ellipse,rgba(0,35,55,0.22),transparent); filter:blur(50px); top:15%; left:-10%; animation-duration:28s; }
+        .deep-shape:nth-child(2) { width:45vw; height:28vh; background:radial-gradient(ellipse,rgba(0,25,45,0.18),transparent); filter:blur(60px); top:55%; right:-8%; animation-duration:34s; animation-delay:6s; }
+        .deep-shape:nth-child(3) { width:38vw; height:40vh; background:radial-gradient(ellipse,rgba(0,40,60,0.16),transparent); filter:blur(45px); top:30%; left:35%; animation-duration:22s; animation-delay:3s; }
         @keyframes shapeDrift {
-            from { transform: translate(0,   0)   scaleY(1);    opacity: 0.5; }
-            to   { transform: translate(4vw, 3vh) scaleY(1.08); opacity: 1;   }
+            from { transform: translate(0,0)     scaleY(1);    opacity: 0.5; }
+            to   { transform: translate(4vw,3vh) scaleY(1.08); opacity: 1;   }
         }
 
         /* ── BIOLUMINESCENT PARTICLE ── */
         .bio {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
+            position: absolute; border-radius: 50%; pointer-events: none;
             animation: bioPulse ease-in-out infinite, bioDrift linear forwards;
         }
         @keyframes bioPulse {
@@ -113,14 +79,8 @@
         }
 
         /* ── FISH ── */
-        .fish {
-            position: absolute;
-            pointer-events: none;
-            left: 0;
-            /* opacity driven by swim keyframes */
-        }
+        .fish { position: absolute; pointer-events: none; left: 0; }
         .fish svg { width: 100%; height: 100%; display: block; }
-
         @keyframes swimRight {
             0%   { transform: translateX(-18vw) translateY(0px);   opacity: 0; }
             6%   { opacity: 0.60; }
@@ -140,128 +100,250 @@
             100% { transform: translateX(-18vw) translateY(0px);   opacity: 0; }
         }
 
-        /* ── VIGNETTE — crushing pressure at the edges ── */
+        /* ── VIGNETTE ── */
         .vignette {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: radial-gradient(ellipse at center, transparent 20%, rgba(0,2,6,0.92) 100%);
             pointer-events: none;
         }
 
-        /* ── DOORWAY ── */
+        /* ══════════════════════════════════════
+           DOOR
+        ══════════════════════════════════════ */
         .door-wrap {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
         }
         .door-frame {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: flex; flex-direction: column; align-items: center;
             width: clamp(240px, 32vw, 340px);
             opacity: 0;
             animation: doorReveal 1s 1.5s ease-out forwards;
+            transition: opacity 0.7s ease;
         }
         @keyframes doorReveal {
             from { opacity: 0; transform: translateY(10px); }
             to   { opacity: 1; transform: translateY(0); }
         }
         .door-arch {
-            width: 100%;
-            height: clamp(130px, 17vw, 200px);
-            border: 1px solid #0e4a5e;
-            border-bottom: none;
+            width: 100%; height: clamp(130px,17vw,200px);
+            border: 1px solid #0e4a5e; border-bottom: none;
             border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1a6a82;
-            background: rgba(0,20,30,0.40);
+            display: flex; align-items: center; justify-content: center;
+            color: #1a6a82; background: rgba(0,20,30,0.40);
             box-shadow: 0 0 28px rgba(20,130,170,0.18), inset 0 0 40px rgba(0,80,110,0.12);
         }
         .door-body {
-            width: 100%;
-            border: 1px solid #0e4a5e;
-            border-top: none;
+            width: 100%; border: 1px solid #0e4a5e; border-top: none;
             padding: 24px 30px 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
+            display: flex; flex-direction: column; align-items: center; gap: 16px;
             background: rgba(0,20,30,0.40);
         }
         .door-input {
-            font-family: 'Cinzel', serif;
-            font-size: 0.88rem;
-            letter-spacing: 0.5em;
-            text-align: center;
-            color: #2a8aaa;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #0e4a5e;
-            width: 100%;
-            padding: 8px 0;
-            outline: none;
+            font-family: 'Cinzel', serif; font-size: 0.88rem;
+            letter-spacing: 0.5em; text-align: center;
+            color: #2a8aaa; background: transparent;
+            border: none; border-bottom: 1px solid #0e4a5e;
+            width: 100%; padding: 8px 0; outline: none;
             caret-color: #2a8aaa;
         }
         .door-input::placeholder { color: rgba(42,138,170,0.3); }
         .door-error {
-            font-family: 'Cinzel', serif;
-            font-size: 0.66rem;
-            letter-spacing: 0.32em;
-            text-transform: uppercase;
+            font-family: 'Cinzel', serif; font-size: 0.66rem;
+            letter-spacing: 0.32em; text-transform: uppercase;
             color: rgba(80,200,200,0.85);
-            opacity: 0;
-            transition: opacity 0.3s;
-            min-height: 16px;
+            opacity: 0; transition: opacity 0.3s; min-height: 16px;
+            text-align: center;
         }
         .door-proceed {
             font-family: 'Cinzel', serif;
-            font-size: clamp(0.70rem, 1.5vw, 0.85rem);
-            letter-spacing: 0.38em;
-            text-transform: uppercase;
-            color: #2a8aaa;
-            background: transparent;
+            font-size: clamp(0.70rem,1.5vw,0.85rem);
+            letter-spacing: 0.38em; text-transform: uppercase;
+            color: #2a8aaa; background: transparent;
             border: 1px solid #0e4a5e;
-            padding: 0.75em 2.4em;
-            cursor: pointer;
+            padding: 0.75em 2.4em; cursor: pointer;
             transition: color 0.4s, border-color 0.4s, box-shadow 0.4s;
             margin-top: 4px;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation; -webkit-tap-highlight-color: transparent;
         }
         .door-proceed:hover {
-            color: #55c0de;
-            border-color: #1e7a94;
+            color: #55c0de; border-color: #1e7a94;
             box-shadow: 0 0 22px rgba(20,130,170,0.35);
+        }
+        .door-proceed:disabled {
+            opacity: 0.35; cursor: default;
+            box-shadow: none; border-color: #0e4a5e; color: #2a8aaa;
         }
         @keyframes inputShake {
             0%, 100% { transform: translateX(0); }
-            20%       { transform: translateX(-6px); }
-            40%       { transform: translateX(6px); }
-            60%       { transform: translateX(-4px); }
-            80%       { transform: translateX(4px); }
+            20% { transform: translateX(-6px); } 40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); } 80% { transform: translateX(4px); }
         }
         .door-input.shake { animation: inputShake 0.45s ease-in-out; }
 
         /* ── EXIT OVERLAY ── */
         #exit-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 999;
-            background: #000;
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; inset: 0; z-index: 999;
+            background: #000; opacity: 0; pointer-events: none;
             transition: opacity 0.7s ease;
         }
 
+        /* ══════════════════════════════════════
+           RIDDLE FEEDBACK FLASH
+        ══════════════════════════════════════ */
+        #riddle-flash {
+            position: absolute; inset: 0;
+            opacity: 0; pointer-events: none;
+            z-index: 15;
+        }
+
+        /* ══════════════════════════════════════
+           SHARED PANEL STYLES (intro + riddle)
+        ══════════════════════════════════════ */
+        #introPanel, #riddlePanel {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10; padding: 20px; overflow-y: auto;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.9s ease;
+        }
+        #introPanel.active, #riddlePanel.active {
+            opacity: 1; pointer-events: all;
+        }
+
+        .riddle-frame {
+            display: flex; flex-direction: column; align-items: center;
+            width: clamp(280px, 58vw, 640px);
+            padding: 34px 42px 40px;
+            border: 1px solid rgba(14,74,94,0.68);
+            background: rgba(0,8,18,0.88);
+            box-shadow: 0 0 80px rgba(20,130,170,0.07), inset 0 0 70px rgba(0,60,90,0.10);
+            gap: 22px;
+            max-height: 90dvh; overflow-y: auto;
+            scrollbar-width: none;
+            animation: abyssBorderPulse 6s ease-in-out infinite alternate;
+        }
+        .riddle-frame::-webkit-scrollbar { display: none; }
+        @keyframes abyssBorderPulse {
+            from { box-shadow: 0 0 35px rgba(20,130,170,0.06), inset 0 0 55px rgba(0,60,90,0.08); }
+            to   { box-shadow: 0 0 65px rgba(20,130,170,0.13), inset 0 0 80px rgba(0,60,90,0.13); }
+        }
+
+        /* Shake for wrong answers */
+        @keyframes frameShake {
+            0%,100% { transform: translateX(0); }
+            15% { transform: translateX(-7px); } 30% { transform: translateX(7px); }
+            45% { transform: translateX(-4px); } 60% { transform: translateX(4px); }
+            80% { transform: translateX(-2px); }
+        }
+        .riddle-frame.shake { animation: frameShake 0.45s ease-in-out; }
+
+        /* Wave surge between riddles */
+        @keyframes waveSurge {
+            0%   { transform: translateY(0)    scale(1); }
+            28%  { transform: translateY(-10px) scale(1.01); }
+            65%  { transform: translateY(5px)   scale(0.99); }
+            100% { transform: translateY(0)    scale(1); }
+        }
+        #riddlePanel.surge { animation: waveSurge 0.75s ease-out forwards; }
+
+        /* Decorative divider */
+        .riddle-divider {
+            width: 52%; height: 1px; flex-shrink: 0;
+            background: linear-gradient(to right, transparent, rgba(14,74,94,0.55), transparent);
+        }
+
+        /* ── INTRO PANEL ── */
+        .riddle-path-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.72rem, 1.7vw, 0.98rem);
+            letter-spacing: 0.46em; text-transform: uppercase;
+            color: rgba(80,200,220,0.72); text-align: center;
+        }
+        .intro-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.67rem, 1.32vw, 0.86rem);
+            line-height: 2.3; letter-spacing: 0.07em;
+            color: rgba(130,205,225,0.78); text-align: center;
+            opacity: 0; transition: opacity 1.6s ease;
+        }
+        .intro-text.visible { opacity: 1; }
+
+        /* ── RIDDLE PANEL ── */
+
+        /* Trident seals */
+        .seal-row { display: flex; gap: 30px; justify-content: center; align-items: center; }
+        .seal-trident {
+            transition: stroke 1.2s ease, filter 1.2s ease;
+        }
+        .seal-trident.lit {
+            stroke: rgba(80,220,255,0.95) !important;
+            filter: drop-shadow(0 0 5px rgba(80,220,255,0.80))
+                    drop-shadow(0 0 16px rgba(40,200,240,0.50));
+        }
+
+        /* Question label */
+        .riddle-q-label {
+            font-family: 'Cinzel', serif; font-size: 0.55rem;
+            letter-spacing: 0.55em; text-transform: uppercase;
+            color: rgba(42,130,160,0.42);
+        }
+
+        /* Riddle body text */
+        .riddle-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.67rem, 1.32vw, 0.87rem);
+            line-height: 2.15; letter-spacing: 0.07em;
+            color: rgba(155,228,240,0.88); text-align: center;
+            transition: opacity 1.3s ease;
+        }
+
+        /* Hint */
+        .riddle-hint {
+            font-family: 'Cinzel', serif; font-size: 0.60rem;
+            letter-spacing: 0.18em; line-height: 2.0;
+            color: rgba(42,120,148,0.48); text-align: center;
+            min-height: 18px;
+            transition: opacity 2s ease;
+        }
+
+        /* Answer block */
+        .riddle-answer-wrap {
+            width: 100%; display: flex; flex-direction: column;
+            align-items: center; gap: 14px;
+        }
+        #riddleInput {
+            letter-spacing: 0.32em; text-transform: uppercase;
+        }
+        #riddleInput::placeholder { text-transform: none; letter-spacing: 0.5em; }
+
+        /* Completion text */
+        .completion-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.72rem, 1.5vw, 0.94rem);
+            line-height: 2.4; letter-spacing: 0.09em;
+            color: rgba(140,225,240,0.92); text-align: center;
+            transition: opacity 2s ease;
+        }
+
+        /* ── MOBILE ── */
         @media (max-width: 600px) {
-            .door-frame   { width: clamp(170px, 72vw, 230px); }
-            .door-arch    { height: 88px; }
-            .door-body    { padding: 16px 20px 20px; gap: 12px; }
+            .door-frame  { width: clamp(170px,72vw,230px); }
+            .door-arch   { height: 88px; }
+            .door-body   { padding: 16px 20px 20px; gap: 12px; }
             .door-proceed { font-size: 0.70rem; letter-spacing: 0.28em; padding: 0.65em 1.8em; }
+            .riddle-frame { padding: 22px 20px 28px; gap: 18px; width: clamp(260px,90vw,440px); }
+            .riddle-text  { font-size: 0.67rem; line-height: 2.0; }
+            .seal-row     { gap: 22px; }
+            .intro-text   { font-size: 0.67rem; }
+        }
+
+        /* ── REDUCED MOTION ── */
+        @media (prefers-reduced-motion: reduce) {
+            .scene, .deep-shape, .abyss-glow, .fish,
+            .bio, .riddle-frame { animation: none !important; }
+            .riddle-text, .riddle-hint, .intro-text,
+            .completion-text, .seal-trident { transition: none !important; }
         }
     </style>
 </head>
@@ -270,175 +352,622 @@
 
     <div class="scene" id="scene">
         <div class="abyss-bg"></div>
-
-        <!-- Vast deep-sea shapes glimpsed in the dark -->
         <div class="deep-shape"></div>
         <div class="deep-shape"></div>
         <div class="deep-shape"></div>
-
-        <!-- Ancient glow from far below -->
         <div class="abyss-glow"></div>
-
         <div class="vignette"></div>
 
-        <div class="door-wrap">
+        <!-- DOOR -->
+        <div class="door-wrap" id="doorWrap">
             <div class="door-frame" id="doorFrame">
                 <div class="door-arch">
-                    <svg viewBox="0 0 30 50" width="38" height="60" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.55">
+                    <svg viewBox="0 0 30 50" width="38" height="60" fill="none"
+                         stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" opacity="0.55">
                         <line x1="15" y1="22" x2="15" y2="46"/>
-                        <line x1="6" y1="30" x2="24" y2="30"/>
+                        <line x1="6"  y1="30" x2="24" y2="30"/>
                         <line x1="15" y1="22" x2="15" y2="8"/>
                         <polyline points="12,14 15,8 18,14"/>
-                        <line x1="6" y1="30" x2="6" y2="16"/>
+                        <line x1="6"  y1="30" x2="6"  y2="16"/>
                         <polyline points="3.5,22 6,16 8.5,22"/>
                         <line x1="24" y1="30" x2="24" y2="16"/>
                         <polyline points="21.5,22 24,16 26.5,22"/>
                     </svg>
                 </div>
                 <div class="door-body">
-                    <input type="password" class="door-input" id="doorInput" placeholder="· · · ·" maxlength="12" autocomplete="off">
+                    <input type="password" class="door-input" id="doorInput"
+                           placeholder="· · · ·" maxlength="12" autocomplete="off">
                     <div class="door-error" id="doorError">denied</div>
                     <button class="door-proceed" id="doorProceed">proceed</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        /* ── BIOLUMINESCENT PARTICLES ── */
-        const scene = document.getElementById('scene');
-        const colors = [
-            'rgba(0,170,150,', // deep teal
-            'rgba(0,100,130,', // dark cyan
-            'rgba(40,160,180,', // bioluminescent teal
-            'rgba(80,200,200,', // brighter teal
-            'rgba(160,230,240,', // pale cyan
-        ];
+        <!-- INTRO PANEL -->
+        <div id="introPanel">
+            <div class="riddle-frame">
+                <div class="riddle-path-title">The Curse of the Unending Tide</div>
+                <div class="riddle-divider"></div>
+                <div class="intro-text" id="introText">
+                    The sea has heard your arrival.<br><br>
+                    But no one enters the domain of the Earth-Shaker<br>
+                    and leaves by will alone.<br><br>
+                    An ancient tide now follows your House.<br>
+                    It will neither retreat nor release you<br>
+                    until four truths lost beneath the waves are recovered.<br><br>
+                    Answer carefully.<br><br>
+                    The sea remembers every insult,<br>
+                    every deception and every broken promise.
+                </div>
+                <div class="riddle-divider"></div>
+                <button class="door-proceed" id="enterTideBtn">Enter the Tide</button>
+            </div>
+        </div>
 
-        function spawnBio() {
-            const el    = document.createElement('div');
-            el.className = 'bio';
-            const sz    = 1 + Math.random() * 3.5;
-            const col   = colors[Math.floor(Math.random() * colors.length)];
-            const peak  = (0.12 + Math.random() * 0.30).toFixed(2);
-            const pulseDur = 3 + Math.random() * 8;
-            const driftDur = 20 + Math.random() * 40;
-            const dx    = ((Math.random() * 40 - 20) | 0) + 'px';
-            const dy    = -20 - (Math.random() * 60 | 0) + 'px';
-            el.style.cssText = [
-                `width:${sz}px`,
-                `height:${sz}px`,
-                `left:${Math.random() * 100}%`,
-                `top:${10 + Math.random() * 85}%`,
-                `background:${col}0.9)`,
-                `box-shadow:0 0 ${sz * 3}px ${sz}px ${col}0.25)`,
-                `--peak:${peak}`,
-                `--dx:${dx}`,
-                `--dy:${dy}`,
-                `animation-duration:${pulseDur}s, ${driftDur}s`,
-                `animation-delay:${(Math.random() * -pulseDur).toFixed(1)}s, 0s`
-            ].join(';');
-            scene.appendChild(el);
-            setTimeout(() => el.remove(), driftDur * 1000);
-        }
+        <!-- RIDDLE PANEL -->
+        <div id="riddlePanel">
+            <div class="riddle-frame" id="riddleFrame">
+                <div class="riddle-q-label" id="riddleQLabel"></div>
+                <div class="seal-row" id="sealRow"></div>
+                <div class="riddle-divider"></div>
+                <div class="riddle-text" id="riddleText" style="opacity:0"></div>
+                <div class="riddle-divider"></div>
+                <div class="riddle-hint" id="riddleHint" style="opacity:0"></div>
+                <div class="riddle-answer-wrap" id="riddleAnswerWrap">
+                    <input type="text" class="door-input" id="riddleInput"
+                           placeholder="your answer"
+                           autocomplete="off" spellcheck="false"
+                           autocorrect="off" autocapitalize="characters">
+                    <div class="door-error" id="riddleError">&nbsp;</div>
+                    <button class="door-proceed" id="riddleSubmit">answer</button>
+                </div>
+            </div>
+        </div>
 
-        for (let i = 0; i < 55; i++) setTimeout(spawnBio, i * 120);
-        setInterval(spawnBio, 1500);
+        <!-- Flash layer — above all panels -->
+        <div id="riddle-flash"></div>
 
-        /* ── FISH ── */
-        // Three SVG shapes for variety
-        const fishShapes = [
-            // Classic fish
-            `<svg viewBox="0 0 110 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="62" cy="24" rx="40" ry="17" fill="rgba(0,50,68,0.62)"/>
-                <path d="M22,24 L3,7 L3,41 Z" fill="rgba(0,42,58,0.62)"/>
-                <path d="M48,7 Q60,15 72,7" stroke="rgba(0,72,95,0.55)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-                <path d="M70,30 Q78,40 64,40 Q68,35 70,30 Z" fill="rgba(0,46,62,0.55)"/>
-                <circle cx="88" cy="20" r="4"   fill="rgba(0,155,175,0.55)"/>
-                <circle cx="89" cy="19" r="1.5" fill="rgba(190,245,255,0.80)"/>
-            </svg>`,
-            // Longer, eel-like fish
-            `<svg viewBox="0 0 130 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="72" cy="18" rx="52" ry="12" fill="rgba(0,40,58,0.58)"/>
-                <path d="M20,18 L2,6 L2,30 Z" fill="rgba(0,32,48,0.58)"/>
-                <path d="M38,6 Q55,12 72,6" stroke="rgba(0,65,85,0.50)" stroke-width="2" fill="none" stroke-linecap="round"/>
-                <circle cx="106" cy="15" r="3.5" fill="rgba(0,140,165,0.52)"/>
-                <circle cx="107" cy="14" r="1.2" fill="rgba(190,245,255,0.75)"/>
-            </svg>`,
-            // Small round lanternfish
-            `<svg viewBox="0 0 68 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="38" cy="21" rx="24" ry="17" fill="rgba(0,45,62,0.65)"/>
-                <path d="M14,21 L2,10 L2,32 Z" fill="rgba(0,36,52,0.65)"/>
-                <circle cx="54" cy="17" r="5"   fill="rgba(0,170,185,0.60)"/>
-                <circle cx="55" cy="16" r="2"   fill="rgba(200,250,255,0.85)"/>
-                <path d="M34,4 Q40,10 46,4" stroke="rgba(0,68,88,0.55)" stroke-width="2" fill="none" stroke-linecap="round"/>
-            </svg>`
-        ];
+    </div><!-- /.scene -->
 
-        function spawnFish() {
-            const goRight = Math.random() > 0.5;
-            const shape   = fishShapes[Math.floor(Math.random() * fishShapes.length)];
-            const h       = 22 + Math.random() * 38;          // height 22–60px
-            const w       = h * (Math.random() > 0.5 ? 2.4 : 1.8); // width proportional
-            const top     = 8 + Math.random() * 76;            // 8–84% from top
-            const dur     = 10 + Math.random() * 11;           // 10–21s crossing time
+<script>
+/* ══════════════════════════════════════
+   BIOLUMINESCENT PARTICLES
+══════════════════════════════════════ */
+const scene = document.getElementById('scene');
+const colors = [
+    'rgba(0,170,150,',
+    'rgba(0,100,130,',
+    'rgba(40,160,180,',
+    'rgba(80,200,200,',
+    'rgba(160,230,240,',
+];
 
-            const el = document.createElement('div');
-            el.className = 'fish';
-            el.style.cssText = [
-                `width:${w}px`,
-                `height:${h}px`,
-                `top:${top}%`,
-                `animation: swim${goRight ? 'Right' : 'Left'} ${dur}s linear forwards`
-            ].join(';');
+function spawnBio() {
+    const el = document.createElement('div');
+    el.className = 'bio';
+    const sz       = 1 + Math.random() * 3.5;
+    const col      = colors[Math.floor(Math.random() * colors.length)];
+    const peak     = (0.12 + Math.random() * 0.30).toFixed(2);
+    const pulseDur = 3 + Math.random() * 8;
+    const driftDur = 20 + Math.random() * 40;
+    const dx       = ((Math.random() * 40 - 20) | 0) + 'px';
+    const dy       = -20 - (Math.random() * 60 | 0) + 'px';
+    el.style.cssText = [
+        `width:${sz}px`, `height:${sz}px`,
+        `left:${Math.random() * 100}%`, `top:${10 + Math.random() * 85}%`,
+        `background:${col}0.9)`,
+        `box-shadow:0 0 ${sz * 3}px ${sz}px ${col}0.25)`,
+        `--peak:${peak}`, `--dx:${dx}`, `--dy:${dy}`,
+        `animation-duration:${pulseDur}s, ${driftDur}s`,
+        `animation-delay:${(Math.random() * -pulseDur).toFixed(1)}s, 0s`
+    ].join(';');
+    scene.appendChild(el);
+    setTimeout(() => el.remove(), driftDur * 1000);
+}
+for (let i = 0; i < 55; i++) setTimeout(spawnBio, i * 120);
+setInterval(spawnBio, 1500);
 
-            // Flip SVG horizontally when swimming left
-            el.innerHTML = `<svg viewBox="${shape.match(/viewBox="([^"]+)"/)[1]}" fill="none"
-                style="transform:scaleX(${goRight ? 1 : -1}); width:100%; height:100%">
-                ${shape.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '')}
-            </svg>`;
+/* ══════════════════════════════════════
+   FISH
+══════════════════════════════════════ */
+const fishShapes = [
+    `<svg viewBox="0 0 110 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="62" cy="24" rx="40" ry="17" fill="rgba(0,50,68,0.62)"/>
+        <path d="M22,24 L3,7 L3,41 Z" fill="rgba(0,42,58,0.62)"/>
+        <path d="M48,7 Q60,15 72,7" stroke="rgba(0,72,95,0.55)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M70,30 Q78,40 64,40 Q68,35 70,30 Z" fill="rgba(0,46,62,0.55)"/>
+        <circle cx="88" cy="20" r="4"   fill="rgba(0,155,175,0.55)"/>
+        <circle cx="89" cy="19" r="1.5" fill="rgba(190,245,255,0.80)"/>
+    </svg>`,
+    `<svg viewBox="0 0 130 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="72" cy="18" rx="52" ry="12" fill="rgba(0,40,58,0.58)"/>
+        <path d="M20,18 L2,6 L2,30 Z" fill="rgba(0,32,48,0.58)"/>
+        <path d="M38,6 Q55,12 72,6" stroke="rgba(0,65,85,0.50)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="106" cy="15" r="3.5" fill="rgba(0,140,165,0.52)"/>
+        <circle cx="107" cy="14" r="1.2" fill="rgba(190,245,255,0.75)"/>
+    </svg>`,
+    `<svg viewBox="0 0 68 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="38" cy="21" rx="24" ry="17" fill="rgba(0,45,62,0.65)"/>
+        <path d="M14,21 L2,10 L2,32 Z" fill="rgba(0,36,52,0.65)"/>
+        <circle cx="54" cy="17" r="5"   fill="rgba(0,170,185,0.60)"/>
+        <circle cx="55" cy="16" r="2"   fill="rgba(200,250,255,0.85)"/>
+        <path d="M34,4 Q40,10 46,4" stroke="rgba(0,68,88,0.55)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>`
+];
 
-            scene.appendChild(el);
-            setTimeout(() => el.remove(), (dur + 2) * 1000);
-        }
+function spawnFish() {
+    const goRight = Math.random() > 0.5;
+    const shape   = fishShapes[Math.floor(Math.random() * fishShapes.length)];
+    const h       = 22 + Math.random() * 38;
+    const w       = h * (Math.random() > 0.5 ? 2.4 : 1.8);
+    const top     = 8 + Math.random() * 76;
+    const dur     = 10 + Math.random() * 11;
+    const el      = document.createElement('div');
+    el.className  = 'fish';
+    el.style.cssText = [
+        `width:${w}px`, `height:${h}px`, `top:${top}%`,
+        `animation: swim${goRight ? 'Right' : 'Left'} ${dur}s linear forwards`
+    ].join(';');
+    el.innerHTML = `<svg viewBox="${shape.match(/viewBox="([^"]+)"/)[1]}" fill="none"
+        style="transform:scaleX(${goRight ? 1 : -1}); width:100%; height:100%">
+        ${shape.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '')}
+    </svg>`;
+    scene.appendChild(el);
+    setTimeout(() => el.remove(), (dur + 2) * 1000);
+}
+function scheduleFish() {
+    const delay = 7000 + Math.random() * 11000;
+    setTimeout(() => { spawnFish(); scheduleFish(); }, delay);
+}
+setTimeout(() => { spawnFish(); scheduleFish(); }, 3000 + Math.random() * 3000);
 
-        function scheduleFish() {
-            const delay = 7000 + Math.random() * 11000;   // next fish in 7–18 s
-            setTimeout(() => { spawnFish(); scheduleFish(); }, delay);
-        }
+/* ══════════════════════════════════════
+   DOOR
+══════════════════════════════════════ */
+const doorInput   = document.getElementById('doorInput');
+const doorError   = document.getElementById('doorError');
+const doorProceed = document.getElementById('doorProceed');
+const doorWrap    = document.getElementById('doorWrap');
+const doorFrame   = document.getElementById('doorFrame');
 
-        // First fish after 3–6 s, then keep scheduling
-        setTimeout(() => { spawnFish(); scheduleFish(); }, 3000 + Math.random() * 3000);
+const POSEIDON_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
 
-        /* ── DOORWAY ── */
-        const doorInput   = document.getElementById('doorInput');
-        const doorError   = document.getElementById('doorError');
-        const doorProceed = document.getElementById('doorProceed');
+async function tryEnter() {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(doorInput.value));
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    if (hex === POSEIDON_HASH) {
+        /* Password correct — set entry flag, show intro. Do NOT set mt_key yet. */
+        sessionStorage.setItem('poseidon_entry', '1');
+        doorFrame.style.opacity      = '0';
+        doorFrame.style.pointerEvents = 'none';
+        setTimeout(() => {
+            doorWrap.style.display = 'none';
+            showIntro();
+        }, 700);
+    } else {
+        doorInput.classList.remove('shake');
+        void doorInput.offsetWidth;
+        doorInput.classList.add('shake');
+        doorError.style.opacity = '1';
+        doorInput.value = '';
+        setTimeout(() => {
+            doorError.style.opacity = '0';
+            doorInput.classList.remove('shake');
+        }, 1400);
+    }
+}
+doorProceed.addEventListener('click', tryEnter);
+doorInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
 
-        async function tryEnter() {
-            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(doorInput.value));
-            const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-            if (hex === '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4') {
-                sessionStorage.setItem('mt_key', hex);
-                const exit = document.getElementById('exit-overlay');
-                exit.style.opacity = '1';
-                exit.style.pointerEvents = 'all';
-                setTimeout(() => { window.location.href = 'wander.html'; }, 750);
+/* ══════════════════════════════════════
+   INTRO
+══════════════════════════════════════ */
+const introPanel   = document.getElementById('introPanel');
+const introText    = document.getElementById('introText');
+const enterTideBtn = document.getElementById('enterTideBtn');
+
+function showIntro() {
+    introPanel.classList.add('active');
+    setTimeout(() => introText.classList.add('visible'), 300);
+}
+
+enterTideBtn.addEventListener('click', () => {
+    introPanel.classList.remove('active');
+    setTimeout(() => {
+        introPanel.style.display = 'none';
+        startRiddles();
+    }, 900);
+});
+
+/* ══════════════════════════════════════
+   RIDDLE DATA  (answers as SHA-256 hashes only)
+══════════════════════════════════════ */
+const RIDDLES = [
+    {
+        label: 'Question I of IV',
+        text:
+            'Two gods desired the guardianship of one city.<br><br>' +
+            'The Lord of the Sea struck the earth<br>' +
+            'and raised a gift of salt and power.<br><br>' +
+            'His rival offered no weapon,<br>' +
+            'no roaring beast and no display of force—<br>' +
+            'only something that could provide<br>' +
+            'food, oil, timber and light.<br><br>' +
+            'The people chose the quieter gift.<br><br>' +
+            'What was it?',
+        hashes: [
+            '5f8b22f90d5701026730328b1b411419aba99c2a18ed357707a4050dda7d7cb4',
+            '6004c7e5cac6aa02b790ba376c2f57eab35ee0ef92aa7c496848d6f1652950e4'
+        ],
+        hints: [
+            'The victorious goddess was Athena.',
+            'Its branches later became symbols of peace and victory.'
+        ]
+    },
+    {
+        label: 'Question II of IV',
+        text:
+            'A giant trapped strangers within his cave<br>' +
+            'and sealed the entrance with a stone<br>' +
+            'that no ordinary man could move.<br><br>' +
+            'Before taking his sight,<br>' +
+            'the wanderer gave him a name that was not a name.<br><br>' +
+            'When the wounded giant cried for help,<br>' +
+            'his brothers heard that this "person" was attacking him—<br>' +
+            'and decided that no help was needed.<br><br>' +
+            'What name did the wanderer give?',
+        hashes: [
+            'a68062f152dcf94a55741625ec5b289bdb87aff6e5c8f2e2652de45120cf0499',
+            'f04eaaf1a42c94797aa982c679e73d3b393358563eb1dc13b2eb7b48d59acb3a'
+        ],
+        hints: [
+            'The giant was Polyphemus, son of Poseidon.',
+            '________ is killing me!'
+        ]
+    },
+    {
+        label: 'Question III of IV',
+        text:
+            'To an ordinary eye, I am something used for writing.<br><br>' +
+            'Remove my cap,<br>' +
+            'and celestial bronze remembers another shape.<br><br>' +
+            'I have been thrown away, lost and forgotten,<br>' +
+            'yet I always return to the pocket of my owner.<br><br>' +
+            'The sea gave me to its son,<br>' +
+            'and the ocean gave me my modern name.<br><br>' +
+            'Name the weapon.',
+        hashes: [
+            '6fc1057b8d0877b48208e2f839ae2b66e04d23695b33992e6f7ac80a92bc7d49',
+            '3acd404568889e2e2aef565b29e8ac0e683913335e9b4c8074db4bd508677d3f',
+            '1cc978b4379dfcd32f1fd4478aa352ffa299faf0d8df041925edf4833a84a585'
+        ],
+        hints: [
+            'It belongs to Percy Jackson.',
+            'It appears as a ballpoint pen when it is not being used as a sword.'
+        ]
+    },
+    {
+        label: 'Question IV of IV',
+        text:
+            'A king prayed for proof that the gods favoured his claim.<br><br>' +
+            'From the sea came a magnificent white bull,<br>' +
+            'sent with one condition:<br>' +
+            'the divine creature must be returned through sacrifice.<br><br>' +
+            'But the king admired the gift too greatly<br>' +
+            'and placed another animal upon the altar.<br><br>' +
+            'Poseidon did not forget the substitution.<br><br>' +
+            'From that broken promise came unnatural desire,<br>' +
+            'a child hidden within a labyrinth<br>' +
+            'and a kingdom stained by its king\'s deception.<br><br>' +
+            'Name the king who kept Poseidon\'s bull.',
+        hashes: [
+            '378c50a34cbe08301aa0d31f79af3c158639462727b3fa301f6fb64359841390',
+            'ed365d54f2c900842fe9abcad19de0b6d38eecfcf0aaff049c82f24a97293630'
+        ],
+        hints: [
+            'The creature eventually born from the punishment was the Minotaur.',
+            'His name begins with M and ends with OS.'
+        ]
+    }
+];
+
+const WRONG_MSGS = [
+    'the sea rejects your answer',
+    'the tide has not released you',
+    'that truth does not belong to these waters',
+    'the abyss does not recognise that name'
+];
+
+/* ══════════════════════════════════════
+   RIDDLE ENGINE
+══════════════════════════════════════ */
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const riddlePanel      = document.getElementById('riddlePanel');
+const riddleFrame      = document.getElementById('riddleFrame');
+const riddleQLabel     = document.getElementById('riddleQLabel');
+const sealRow          = document.getElementById('sealRow');
+const riddleText       = document.getElementById('riddleText');
+const riddleHint       = document.getElementById('riddleHint');
+const riddleInput      = document.getElementById('riddleInput');
+const riddleError      = document.getElementById('riddleError');
+const riddleSubmit     = document.getElementById('riddleSubmit');
+const riddleAnswerWrap = document.getElementById('riddleAnswerWrap');
+const riddleFlashEl    = document.getElementById('riddle-flash');
+
+let currentQ     = 0;
+let answerLocked = false;
+let wrongMsgIdx  = 0;
+let hintTimer1   = null;
+let hintTimer2   = null;
+
+/* ── Trident seals ── */
+function buildSeals() {
+    sealRow.innerHTML = '';
+    const pts = [
+        ['M15,22 L15,46'],
+        ['M6,30 L24,30'],
+        ['M15,22 L15,8'],
+        ['M12,14 L15,8 L18,14'],
+        ['M6,30 L6,16'],
+        ['M3.5,22 L6,16 L8.5,22'],
+        ['M24,30 L24,16'],
+        ['M21.5,22 L24,16 L26.5,22']
+    ];
+    for (let i = 0; i < 4; i++) {
+        const ns  = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('viewBox', '0 0 30 50');
+        svg.setAttribute('width',  '18');
+        svg.setAttribute('height', '30');
+        svg.setAttribute('id', 'seal-' + i);
+        svg.setAttribute('fill', 'none');
+        const g = document.createElementNS(ns, 'g');
+        g.classList.add('seal-trident');
+        g.setAttribute('stroke', 'rgba(14,74,94,0.35)');
+        g.setAttribute('stroke-width', '2');
+        g.setAttribute('stroke-linecap', 'round');
+        g.setAttribute('stroke-linejoin', 'round');
+        /* draw trident lines */
+        [
+            ['line', {x1:'15',y1:'22',x2:'15',y2:'46'}],
+            ['line', {x1:'6', y1:'30',x2:'24',y2:'30'}],
+            ['line', {x1:'15',y1:'22',x2:'15',y2:'8'}],
+            ['polyline', {points:'12,14 15,8 18,14'}],
+            ['line', {x1:'6', y1:'30',x2:'6', y2:'16'}],
+            ['polyline', {points:'3.5,22 6,16 8.5,22'}],
+            ['line', {x1:'24',y1:'30',x2:'24',y2:'16'}],
+            ['polyline', {points:'21.5,22 24,16 26.5,22'}],
+        ].forEach(([tag, attrs]) => {
+            const el = document.createElementNS(ns, tag);
+            Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v));
+            g.appendChild(el);
+        });
+        svg.appendChild(g);
+        sealRow.appendChild(svg);
+    }
+}
+
+function illuminateSeal(index) {
+    const g = document.querySelector('#seal-' + index + ' .seal-trident');
+    if (g) g.classList.add('lit');
+}
+
+/* ── Flash effects ── */
+function triggerFlash(type) {
+    if (reducedMotion) return;
+    riddleFlashEl.style.background = type === 'correct'
+        ? 'rgba(80,220,255,1)'
+        : 'rgba(0,5,18,1)';
+    const strength = type === 'correct' ? '0.82' : '0.68';
+    riddleFlashEl.style.transition = 'opacity 0.06s linear';
+    riddleFlashEl.style.opacity    = strength;
+    setTimeout(() => {
+        riddleFlashEl.style.transition = 'opacity 0.65s ease';
+        riddleFlashEl.style.opacity    = '0';
+    }, 110);
+}
+
+function triggerShake() {
+    if (reducedMotion) return;
+    riddleFrame.classList.remove('shake');
+    void riddleFrame.offsetWidth;
+    riddleFrame.classList.add('shake');
+    riddleFrame.addEventListener('animationend',
+        () => riddleFrame.classList.remove('shake'), { once: true });
+}
+
+function spawnBurstBubbles() {
+    if (reducedMotion) return;
+    for (let i = 0; i < 18; i++) {
+        const el  = document.createElement('div');
+        el.className = 'bio';
+        const sz  = 2 + Math.random() * 5;
+        const col = Math.random() > 0.5 ? 'rgba(80,220,255,' : 'rgba(40,190,220,';
+        const dx  = ((Math.random() * 60 - 30) | 0) + 'px';
+        const dy  = (-55 - (Math.random() * 75 | 0)) + 'px';
+        const driftDur = 0.9 + Math.random() * 0.8;
+        el.style.cssText = [
+            `width:${sz}px`, `height:${sz}px`,
+            `left:${37 + Math.random() * 26}%`,
+            `top:${42 + Math.random() * 16}%`,
+            `background:${col}0.92)`,
+            `box-shadow:0 0 ${sz*3}px ${sz}px ${col}0.40)`,
+            `--peak:0.92`, `--dx:${dx}`, `--dy:${dy}`,
+            `animation-duration:0.7s, ${driftDur}s`,
+            `animation-delay:${(Math.random() * 0.15).toFixed(2)}s, 0s`
+        ].join(';');
+        scene.appendChild(el);
+        setTimeout(() => el.remove(), (driftDur + 0.4) * 1000);
+    }
+}
+
+function triggerWaveSurge(callback) {
+    if (reducedMotion) { setTimeout(callback, 100); return; }
+    riddlePanel.classList.add('surge');
+    riddlePanel.addEventListener('animationend', () => {
+        riddlePanel.classList.remove('surge');
+        callback();
+    }, { once: true });
+}
+
+/* ── Show riddle ── */
+function showRiddle(index) {
+    answerLocked = false;
+    clearTimeout(hintTimer1);
+    clearTimeout(hintTimer2);
+
+    const r = RIDDLES[index];
+    riddleQLabel.textContent = r.label;
+
+    /* Snap invisible */
+    riddleText.style.transition = 'none';
+    riddleText.style.opacity    = '0';
+    riddleHint.style.transition = 'none';
+    riddleHint.style.opacity    = '0';
+    riddleHint.innerHTML        = '';
+    riddleError.style.opacity   = '0';
+    riddleInput.value           = '';
+    riddleInput.disabled        = false;
+    riddleSubmit.disabled       = false;
+
+    setTimeout(() => {
+        riddleText.style.transition = '';
+        riddleHint.style.transition = '';
+        riddleText.innerHTML = r.text;
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            riddleText.style.opacity = '1';
+        }));
+
+        setTimeout(() => riddleInput.focus(), 60);
+
+        hintTimer1 = setTimeout(() => {
+            riddleHint.innerHTML     = r.hints[0];
+            riddleHint.style.opacity = '1';
+        }, 20000);
+        hintTimer2 = setTimeout(() => {
+            riddleHint.innerHTML = r.hints[0] + '<br>' + r.hints[1];
+        }, 45000);
+
+    }, index === 0 ? 150 : 500);
+}
+
+/* ── Check answer ── */
+async function checkAnswer() {
+    if (answerLocked) return;
+
+    const normalised = riddleInput.value
+        .trim().toUpperCase()
+        .replace(/-/g, ' ')
+        .replace(/'/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    if (!normalised) return;
+
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalised));
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+
+    if (RIDDLES[currentQ].hashes.includes(hex)) {
+        /* ── Correct ── */
+        answerLocked = true;
+        clearTimeout(hintTimer1);
+        clearTimeout(hintTimer2);
+        riddleInput.disabled  = true;
+        riddleSubmit.disabled = true;
+        riddleError.style.opacity = '0';
+
+        triggerFlash('correct');
+        spawnBurstBubbles();
+
+        setTimeout(() => {
+            illuminateSeal(currentQ);
+            currentQ++;
+
+            if (currentQ >= RIDDLES.length) {
+                riddleText.style.opacity = '0';
+                riddleHint.style.opacity = '0';
+                setTimeout(showCompletion, 900);
             } else {
-                doorInput.classList.remove('shake');
-                void doorInput.offsetWidth;
-                doorInput.classList.add('shake');
-                doorError.style.opacity = '1';
-                doorInput.value = '';
-                setTimeout(() => {
-                    doorError.style.opacity = '0';
-                    doorInput.classList.remove('shake');
-                }, 1400);
+                riddleText.style.opacity = '0';
+                riddleHint.style.opacity = '0';
+                setTimeout(() => triggerWaveSurge(() => showRiddle(currentQ)), 650);
             }
-        }
+        }, 380);
 
-        doorProceed.addEventListener('click', tryEnter);
-        doorInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
-    </script>
+    } else {
+        /* ── Wrong ── */
+        triggerFlash('wrong');
+        triggerShake();
+
+        const msg = WRONG_MSGS[wrongMsgIdx % WRONG_MSGS.length];
+        wrongMsgIdx++;
+        riddleError.textContent   = msg;
+        riddleError.style.opacity = '1';
+        riddleInput.value         = '';
+
+        setTimeout(() => { riddleError.style.opacity = '0'; }, 2400);
+    }
+}
+
+/* ── Completion ── */
+function showCompletion() {
+    /* Collapse all invisible riddle elements so they don't push content down */
+    riddleAnswerWrap.style.display = 'none';
+    riddleText.style.display       = 'none';
+    riddleHint.style.display       = 'none';
+    riddleFrame.querySelectorAll('.riddle-divider')
+               .forEach(d => d.style.display = 'none');
+    riddleQLabel.textContent = 'Tide Stilled';
+
+    const compText = document.createElement('div');
+    compText.className  = 'completion-text';
+    compText.style.opacity = '0';
+    compText.innerHTML =
+        'The broken promise has been answered.<br><br>' +
+        'The Earth-Shaker stills the waters.<br><br>' +
+        'The tide that followed your House has begun to retreat.<br><br>' +
+        'Beyond the final current, something waits to be found.';
+    riddleFrame.insertBefore(compText, riddleAnswerWrap);
+
+    const btn = document.createElement('button');
+    btn.className   = 'door-proceed';
+    btn.textContent = 'CROSS THE FINAL TIDE';
+    btn.style.letterSpacing = '0.34em';
+    btn.style.opacity = '0';
+    btn.style.transition = 'opacity 2s ease, color 0.4s, border-color 0.4s, box-shadow 0.4s';
+    btn.addEventListener('click', crossTide);
+    riddleFrame.insertBefore(btn, riddleAnswerWrap);
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        compText.style.transition = 'opacity 2s ease';
+        compText.style.opacity    = '1';
+    }));
+    setTimeout(() => { btn.style.opacity = '1'; }, 1200);
+}
+
+/* ── Cross the tide (navigate to wander) ── */
+function crossTide() {
+    sessionStorage.setItem('poseidon_complete', 'true');
+    sessionStorage.setItem('mt_key', POSEIDON_HASH);
+    const exit = document.getElementById('exit-overlay');
+    exit.style.opacity      = '1';
+    exit.style.pointerEvents = 'all';
+    setTimeout(() => { window.location.href = 'wander.html'; }, 750);
+}
+
+/* ── Start riddle sequence ── */
+function startRiddles() {
+    buildSeals();
+    riddlePanel.classList.add('active');
+    setTimeout(() => showRiddle(0), 350);
+}
+
+/* ── Riddle input events ── */
+riddleSubmit.addEventListener('click', checkAnswer);
+riddleInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
+</script>
 </body>
 </html>

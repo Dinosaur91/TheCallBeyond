@@ -28,67 +28,55 @@
 
         /* ── HELL BACKGROUND ── */
         .hell-bg {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: linear-gradient(
                 to bottom,
-                #000000  0%,
-                #060000  12%,
-                #100000  25%,
-                #220000  40%,
-                #450400  57%,
-                #7a0e00  72%,
-                #b02000  86%,
-                #cc2800  100%
+                #000000  0%, #060000  12%, #100000  25%, #220000  40%,
+                #450400 57%, #7a0e00  72%, #b02000  86%, #cc2800  100%
             );
         }
 
-        /* ── LAVA GLOW AT BOTTOM ── */
+        /* ── LAVA GLOW ── */
         .lava-glow {
-            position: absolute;
-            bottom: 0; left: 0;
+            position: absolute; bottom: 0; left: 0;
             width: 100%; height: 30%;
             background: radial-gradient(ellipse at 50% 100%, rgba(220,80,10,0.55) 0%, rgba(160,30,0,0.28) 50%, transparent 80%);
             animation: lavaFlicker 3.5s ease-in-out infinite alternate;
             pointer-events: none;
+            transition: opacity 1.4s ease;
         }
         @keyframes lavaFlicker {
             from { opacity: 0.75; }
             to   { opacity: 1; }
         }
 
-        /* ── SMOKE LAYERS ── */
+        /* ── SMOKE ── */
         .smoke {
-            position: absolute;
-            border-radius: 50%;
+            position: absolute; border-radius: 50%;
             background: radial-gradient(ellipse, rgba(18,8,8,0.55), transparent);
-            filter: blur(36px);
-            pointer-events: none;
+            filter: blur(36px); pointer-events: none;
             animation: smokeDrift ease-in-out infinite alternate;
+            transition: opacity 1.4s ease;
         }
-        .smoke-1 { width: 60vw; height: 28vh; bottom: 20%; left: -8%;  animation-duration: 20s; }
-        .smoke-2 { width: 55vw; height: 22vh; bottom: 35%; right: -5%; animation-duration: 26s; animation-delay: 4s; }
-        .smoke-3 { width: 70vw; height: 32vh; bottom: 14%; left: 15%;  animation-duration: 18s; animation-delay: 2s; }
+        .smoke-1 { width:60vw; height:28vh; bottom:20%; left:-8%;  animation-duration:20s; }
+        .smoke-2 { width:55vw; height:22vh; bottom:35%; right:-5%; animation-duration:26s; animation-delay:4s; }
+        .smoke-3 { width:70vw; height:32vh; bottom:14%; left:15%;  animation-duration:18s; animation-delay:2s; }
         @keyframes smokeDrift {
-            from { transform: translateX(0)    scaleY(1);    opacity: 0.6; }
-            to   { transform: translateX(6vw)  scaleY(1.1);  opacity: 1;   }
+            from { transform: translateX(0)   scaleY(1);   opacity: 0.6; }
+            to   { transform: translateX(6vw) scaleY(1.1); opacity: 1;   }
         }
 
         /* ── ROCKY SILHOUETTES ── */
         .rocks-wrap {
-            position: absolute;
-            bottom: 0; left: 0;
+            position: absolute; bottom: 0; left: 0;
             width: 100%; height: 55%;
             pointer-events: none;
         }
-        .rocks-wrap svg {
-            width: 100%; height: 100%;
-        }
+        .rocks-wrap svg { width: 100%; height: 100%; }
 
         /* ── EMBER ── */
         .ember {
-            position: absolute;
-            border-radius: 50%;
+            position: absolute; border-radius: 50%;
             pointer-events: none;
             animation: emberRise linear infinite;
         }
@@ -101,126 +89,252 @@
 
         /* ── VIGNETTE ── */
         .vignette {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.72) 100%);
             pointer-events: none;
+            transition: opacity 0.8s ease;
         }
 
-        /* ── DOORWAY ── */
+        /* ── EXIT OVERLAY ── */
+        #exit-overlay {
+            position: fixed; inset: 0; z-index: 999;
+            background: #000; opacity: 0; pointer-events: none;
+            transition: opacity 0.7s ease;
+        }
+
+        /* ══════════════════════════════════════
+           RIDDLE FEEDBACK FLASH
+        ══════════════════════════════════════ */
+        #riddle-flash {
+            position: absolute; inset: 0;
+            opacity: 0; pointer-events: none;
+            z-index: 15;
+        }
+
+        /* ══════════════════════════════════════
+           DOOR
+        ══════════════════════════════════════ */
         .door-wrap {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
         }
         .door-frame {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: clamp(240px, 32vw, 340px);
+            display: flex; flex-direction: column; align-items: center;
+            width: clamp(240px,32vw,340px);
             opacity: 0;
             animation: doorReveal 1s 1.2s ease-out forwards;
+            transition: opacity 0.7s ease;
         }
         @keyframes doorReveal {
             from { opacity: 0; transform: translateY(10px); }
             to   { opacity: 1; transform: translateY(0); }
         }
         .door-arch {
-            width: 100%;
-            height: clamp(130px, 17vw, 200px);
-            border: 1px solid #881c10;
-            border-bottom: none;
+            width: 100%; height: clamp(130px,17vw,200px);
+            border: 1px solid #881c10; border-bottom: none;
             border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #aa2a16;
-            background: rgba(8,0,0,0.55);
+            display: flex; align-items: center; justify-content: center;
+            color: #aa2a16; background: rgba(8,0,0,0.55);
             box-shadow: 0 0 28px rgba(200,60,20,0.20), inset 0 0 40px rgba(100,10,0,0.15);
         }
         .door-body {
-            width: 100%;
-            border: 1px solid #881c10;
-            border-top: none;
+            width: 100%; border: 1px solid #881c10; border-top: none;
             padding: 24px 30px 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
+            display: flex; flex-direction: column; align-items: center; gap: 16px;
             background: rgba(8,0,0,0.55);
         }
         .door-input {
-            font-family: 'Cinzel', serif;
-            font-size: 0.88rem;
-            letter-spacing: 0.5em;
-            text-align: center;
-            color: #cc4422;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #881c10;
-            width: 100%;
-            padding: 8px 0;
-            outline: none;
+            font-family: 'Cinzel', serif; font-size: 0.88rem;
+            letter-spacing: 0.5em; text-align: center;
+            color: #cc4422; background: transparent;
+            border: none; border-bottom: 1px solid #881c10;
+            width: 100%; padding: 8px 0; outline: none;
             caret-color: #cc4422;
         }
         .door-input::placeholder { color: rgba(204,68,34,0.3); }
         .door-error {
-            font-family: 'Cinzel', serif;
-            font-size: 0.66rem;
-            letter-spacing: 0.32em;
-            text-transform: uppercase;
+            font-family: 'Cinzel', serif; font-size: 0.66rem;
+            letter-spacing: 0.32em; text-transform: uppercase;
             color: rgba(220,100,60,0.85);
-            opacity: 0;
-            transition: opacity 0.3s;
-            min-height: 16px;
+            opacity: 0; transition: opacity 0.3s; min-height: 16px;
+            text-align: center;
         }
         .door-proceed {
             font-family: 'Cinzel', serif;
-            font-size: clamp(0.70rem, 1.5vw, 0.85rem);
-            letter-spacing: 0.38em;
-            text-transform: uppercase;
-            color: #cc4422;
-            background: transparent;
+            font-size: clamp(0.70rem,1.5vw,0.85rem);
+            letter-spacing: 0.38em; text-transform: uppercase;
+            color: #cc4422; background: transparent;
             border: 1px solid #881c10;
-            padding: 0.75em 2.4em;
-            cursor: pointer;
+            padding: 0.75em 2.4em; cursor: pointer;
             transition: color 0.4s, border-color 0.4s, box-shadow 0.4s;
             margin-top: 4px;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation; -webkit-tap-highlight-color: transparent;
         }
         .door-proceed:hover {
-            color: #ff7755;
-            border-color: #aa3322;
+            color: #ff7755; border-color: #aa3322;
             box-shadow: 0 0 22px rgba(200,60,20,0.45);
         }
+        .door-proceed:disabled {
+            opacity: 0.35; cursor: default;
+            box-shadow: none; border-color: #881c10; color: #cc4422;
+        }
         @keyframes inputShake {
-            0%, 100% { transform: translateX(0); }
-            20%       { transform: translateX(-6px); }
-            40%       { transform: translateX(6px); }
-            60%       { transform: translateX(-4px); }
-            80%       { transform: translateX(4px); }
+            0%,100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); } 40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); } 80% { transform: translateX(4px); }
         }
         .door-input.shake { animation: inputShake 0.45s ease-in-out; }
 
-        /* ── EXIT OVERLAY — fades to black ── */
-        #exit-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 999;
-            background: #000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.7s ease;
+        /* ══════════════════════════════════════
+           PANELS — INTRO + RIDDLE
+        ══════════════════════════════════════ */
+        #introPanel, #riddlePanel {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10; padding: 20px; overflow-y: auto;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.9s ease;
+        }
+        #introPanel.active, #riddlePanel.active { opacity: 1; pointer-events: all; }
+
+        /* ── INTRO MODE — embers and lava restrained while intro is visible ── */
+        .scene.intro-mode .ember    { opacity: 0 !important; animation: none !important; }
+        .scene.intro-mode .lava-glow { opacity: 0.40 !important; }
+        .scene.intro-mode .smoke    { opacity: 0.35 !important; }
+
+        /* ── INTRO TEXT ── */
+        .riddle-path-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.72rem,1.7vw,0.98rem);
+            letter-spacing: 0.46em; text-transform: uppercase;
+            color: rgba(200,70,40,0.78); text-align: center;
+        }
+        .intro-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.67rem,1.32vw,0.86rem);
+            line-height: 2.3; letter-spacing: 0.07em;
+            color: rgba(185,90,55,0.82); text-align: center;
+            opacity: 0; transition: opacity 1.6s ease;
+        }
+        .intro-text.visible { opacity: 1; }
+
+        /* ── RIDDLE FRAME ── */
+        @keyframes hellBorderPulse {
+            from { box-shadow: 0 0 28px rgba(150,30,10,0.06), inset 0 0 50px rgba(60,5,0,0.08); }
+            to   { box-shadow: 0 0 62px rgba(150,30,10,0.15), inset 0 0 80px rgba(60,5,0,0.16); }
         }
 
+        .riddle-frame {
+            display: flex; flex-direction: column; align-items: center;
+            width: clamp(280px,58vw,640px);
+            padding: 34px 42px 40px;
+            border: 1px solid rgba(136,28,16,0.68);
+            background: rgba(6,0,0,0.90);
+            gap: 22px;
+            max-height: 90dvh; overflow-y: auto;
+            scrollbar-width: none;
+            animation: hellBorderPulse 6s ease-in-out infinite alternate;
+        }
+        .riddle-frame::-webkit-scrollbar { display: none; }
+
+        @keyframes frameShake {
+            0%,100% { transform: translateX(0); }
+            15% { transform: translateX(-7px); } 30% { transform: translateX(7px); }
+            45% { transform: translateX(-4px); } 60% { transform: translateX(4px); }
+            80% { transform: translateX(-2px); }
+        }
+        .riddle-frame.shake { animation: frameShake 0.45s ease-in-out; }
+
+        /* ── Skull progress seals ── */
+        .seal-row { display: flex; gap: 28px; justify-content: center; align-items: center; }
+        .seal-skull {
+            transition: stroke 1.2s ease, fill 1.2s ease, filter 1.2s ease;
+        }
+        .seal-skull.lit {
+            stroke: rgba(150,255,185,0.92) !important;
+            fill:   rgba(150,255,185,0.12) !important;
+            filter: drop-shadow(0 0 5px rgba(140,255,175,0.82))
+                    drop-shadow(0 0 18px rgba(100,240,155,0.48));
+        }
+
+        /* ── Divider ── */
+        .riddle-divider {
+            width: 52%; height: 1px; flex-shrink: 0;
+            background: linear-gradient(to right, transparent, rgba(136,28,16,0.45), transparent);
+        }
+
+        /* ── Question label ── */
+        .riddle-q-label {
+            font-family: 'Cinzel', serif; font-size: 0.55rem;
+            letter-spacing: 0.55em; text-transform: uppercase;
+            color: rgba(148,42,24,0.42);
+        }
+
+        /* ── Riddle body text ── */
+        .riddle-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.67rem,1.32vw,0.87rem);
+            line-height: 2.15; letter-spacing: 0.07em;
+            color: rgba(200,105,72,0.88); text-align: center;
+            transition: opacity 1.3s ease;
+        }
+
+        /* ── Hint ── */
+        .riddle-hint {
+            font-family: 'Cinzel', serif; font-size: 0.60rem;
+            letter-spacing: 0.18em; line-height: 2.0;
+            color: rgba(148,55,35,0.50); text-align: center;
+            min-height: 18px;
+            transition: opacity 2s ease;
+        }
+
+        /* ── Answer block ── */
+        .riddle-answer-wrap {
+            width: 100%; display: flex; flex-direction: column;
+            align-items: center; gap: 14px;
+        }
+        #riddleInput { letter-spacing: 0.32em; text-transform: uppercase; }
+        #riddleInput::placeholder { text-transform: none; letter-spacing: 0.5em; }
+
+        /* ── Completion text ── */
+        .completion-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.72rem,1.5vw,0.94rem);
+            line-height: 2.4; letter-spacing: 0.09em;
+            color: rgba(210,118,82,0.92); text-align: center;
+            transition: opacity 2s ease;
+        }
+
+        /* ── Soul-rise particles ── */
+        .soul {
+            position: absolute; border-radius: 50%; pointer-events: none;
+            animation: soulRise ease-out forwards;
+        }
+        @keyframes soulRise {
+            0%   { opacity: 0;                  transform: translate(0,0) scale(1); }
+            12%  { opacity: var(--peak,0.75); }
+            100% { opacity: 0;                  transform: translate(var(--dx,0px),var(--dy,-120px)) scale(0.3); }
+        }
+
+        /* ── MOBILE ── */
         @media (max-width: 600px) {
-            .door-frame   { width: clamp(170px, 72vw, 230px); }
+            .door-frame   { width: clamp(170px,72vw,230px); }
             .door-arch    { height: 88px; }
             .door-body    { padding: 16px 20px 20px; gap: 12px; }
             .door-proceed { font-size: 0.70rem; letter-spacing: 0.28em; padding: 0.65em 1.8em; }
+            .riddle-frame { padding: 22px 20px 28px; gap: 18px; width: clamp(260px,90vw,440px); }
+            .riddle-text  { font-size: 0.67rem; line-height: 2.0; }
+            .intro-text   { font-size: 0.67rem; }
+            .seal-row     { gap: 20px; }
+        }
+
+        /* ── REDUCED MOTION ── */
+        @media (prefers-reduced-motion: reduce) {
+            .scene, .smoke, .lava-glow, .ember,
+            .riddle-frame { animation: none !important; }
+            .riddle-text, .riddle-hint, .intro-text,
+            .completion-text, .seal-skull,
+            .smoke, .lava-glow, .vignette { transition: none !important; }
         }
     </style>
 </head>
@@ -230,21 +344,17 @@
     <div class="scene" id="scene">
         <div class="hell-bg"></div>
 
-        <!-- Smoke -->
         <div class="smoke smoke-1"></div>
         <div class="smoke smoke-2"></div>
         <div class="smoke smoke-3"></div>
 
-        <!-- Rocky silhouettes -->
         <div class="rocks-wrap">
             <svg viewBox="0 0 1440 500" preserveAspectRatio="xMidYMax slice"
                  xmlns="http://www.w3.org/2000/svg">
-                <!-- Far layer — dark crimson -->
                 <path fill="rgba(20,2,2,0.70)"
                     d="M0,500 L0,310 L90,280 L180,305 L260,250 L340,272 L430,225
                        L510,248 L600,200 L680,228 L770,188 L850,215 L940,172
                        L1020,200 L1110,158 L1200,186 L1300,148 L1440,175 L1440,500 Z"/>
-                <!-- Near layer — near-black -->
                 <path fill="rgba(6,0,0,0.95)"
                     d="M0,500 L0,380 L70,350 L150,368 L220,325 L310,342 L390,298
                        L480,318 L560,278 L650,302 L740,262 L830,288 L920,248
@@ -253,15 +363,18 @@
             </svg>
         </div>
 
-        <!-- Lava glow -->
         <div class="lava-glow"></div>
+        <div class="vignette" id="vignette"></div>
 
-        <div class="vignette"></div>
+        <!-- Flash layer — above all panels -->
+        <div id="riddle-flash"></div>
 
-        <div class="door-wrap">
+        <!-- DOOR -->
+        <div class="door-wrap" id="doorWrap">
             <div class="door-frame" id="doorFrame">
                 <div class="door-arch">
-                    <svg viewBox="0 0 32 38" width="40" height="48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55">
+                    <svg viewBox="0 0 32 38" width="40" height="48" fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="0.55">
                         <path d="M16,4 C8,4 5,11 5,18 C5,24 8,27 11,29 L11,34 L21,34 L21,29 C24,27 27,24 27,18 C27,11 24,4 16,4 Z"/>
                         <ellipse cx="11" cy="18" rx="3" ry="4"/>
                         <ellipse cx="21" cy="18" rx="3" ry="4"/>
@@ -270,73 +383,542 @@
                     </svg>
                 </div>
                 <div class="door-body">
-                    <input type="password" class="door-input" id="doorInput" placeholder="· · · ·" maxlength="12" autocomplete="off">
+                    <input type="password" class="door-input" id="doorInput"
+                           placeholder="· · · ·" maxlength="12" autocomplete="off">
                     <div class="door-error" id="doorError">denied</div>
                     <button class="door-proceed" id="doorProceed">proceed</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        /* ── EMBERS ── */
-        const scene = document.getElementById('scene');
+        <!-- INTRO PANEL -->
+        <div id="introPanel">
+            <div class="riddle-frame">
+                <div class="riddle-path-title">The Curse of the Unquiet Dead</div>
+                <div class="riddle-divider"></div>
+                <div class="intro-text" id="introText">
+                    The dead have heard your arrival.<br><br>
+                    But no living soul enters the kingdom below<br>
+                    without disturbing what should remain at rest.<br><br>
+                    Four names have been torn from the memory of the Underworld.<br>
+                    Until they are restored, the dead will wander,<br>
+                    the gates will remain closed<br>
+                    and the darkness will follow your House.<br><br>
+                    Answer carefully.<br><br>
+                    The dead remember what the living forget.
+                </div>
+                <div class="riddle-divider"></div>
+                <button class="door-proceed" id="descendBtn">Descend into Darkness</button>
+            </div>
+        </div>
 
-        function spawnEmber() {
-            const el    = document.createElement('div');
-            el.className = 'ember';
-            const sz    = 1 + Math.random() * 2.5;
-            const dur   = 5 + Math.random() * 9;
-            const r     = (200 + Math.random() * 55) | 0;
-            const g     = (40  + Math.random() * 80) | 0;
-            const drift = ((Math.random() * 60 - 30) | 0) + 'px';
-            el.style.cssText = [
-                `width:${sz}px`,
-                `height:${sz}px`,
-                `left:${Math.random() * 100}%`,
-                `bottom:${Math.random() * 18}%`,
-                `background:rgba(${r},${g},8,0.92)`,
-                `box-shadow:0 0 ${sz * 2.5}px ${sz}px rgba(${r},${g},8,0.50)`,
-                `--drift:${drift}`,
-                `animation-duration:${dur}s`,
-                `animation-delay:${(Math.random() * -dur).toFixed(1)}s`
-            ].join(';');
-            scene.appendChild(el);
-            setTimeout(() => el.remove(), (dur + 2) * 1000);
-        }
+        <!-- RIDDLE PANEL -->
+        <div id="riddlePanel">
+            <div class="riddle-frame" id="riddleFrame">
+                <div class="riddle-q-label" id="riddleQLabel"></div>
+                <div class="seal-row" id="sealRow"></div>
+                <div class="riddle-divider"></div>
+                <div class="riddle-text" id="riddleText" style="opacity:0"></div>
+                <div class="riddle-divider"></div>
+                <div class="riddle-hint" id="riddleHint" style="opacity:0"></div>
+                <div class="riddle-answer-wrap" id="riddleAnswerWrap">
+                    <input type="text" class="door-input" id="riddleInput"
+                           placeholder="your answer"
+                           autocomplete="off" spellcheck="false"
+                           autocorrect="off" autocapitalize="characters">
+                    <div class="door-error" id="riddleError">&nbsp;</div>
+                    <button class="door-proceed" id="riddleSubmit">answer</button>
+                </div>
+            </div>
+        </div>
 
-        for (let i = 0; i < 40; i++) setTimeout(spawnEmber, i * 80);
-        setInterval(spawnEmber, 500);
+    </div><!-- /.scene -->
 
-        /* ── DOORWAY ── */
-        const doorInput   = document.getElementById('doorInput');
-        const doorError   = document.getElementById('doorError');
-        const doorProceed = document.getElementById('doorProceed');
+<script>
+/* ══════════════════════════════════════
+   EMBERS
+══════════════════════════════════════ */
+const scene = document.getElementById('scene');
 
-        async function tryEnter() {
-            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(doorInput.value));
-            const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-            if (hex === '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4') {
-                sessionStorage.setItem('mt_key', hex);
-                const exit = document.getElementById('exit-overlay');
-                exit.style.opacity = '1';
-                exit.style.pointerEvents = 'all';
-                setTimeout(() => { window.location.href = 'wander.html'; }, 750);
+function spawnEmber() {
+    const el  = document.createElement('div');
+    el.className = 'ember';
+    const sz    = 1 + Math.random() * 2.5;
+    const dur   = 5 + Math.random() * 9;
+    const r     = (200 + Math.random() * 55) | 0;
+    const g     = (40  + Math.random() * 80) | 0;
+    const drift = ((Math.random() * 60 - 30) | 0) + 'px';
+    el.style.cssText = [
+        `width:${sz}px`, `height:${sz}px`,
+        `left:${Math.random() * 100}%`,
+        `bottom:${Math.random() * 18}%`,
+        `background:rgba(${r},${g},8,0.92)`,
+        `box-shadow:0 0 ${sz * 2.5}px ${sz}px rgba(${r},${g},8,0.50)`,
+        `--drift:${drift}`,
+        `animation-duration:${dur}s`,
+        `animation-delay:${(Math.random() * -dur).toFixed(1)}s`
+    ].join(';');
+    scene.appendChild(el);
+    setTimeout(() => el.remove(), (dur + 2) * 1000);
+}
+
+for (let i = 0; i < 40; i++) setTimeout(spawnEmber, i * 80);
+setInterval(spawnEmber, 500);
+
+/* ══════════════════════════════════════
+   DOOR
+══════════════════════════════════════ */
+const doorInput   = document.getElementById('doorInput');
+const doorError   = document.getElementById('doorError');
+const doorProceed = document.getElementById('doorProceed');
+const doorWrap    = document.getElementById('doorWrap');
+const doorFrame   = document.getElementById('doorFrame');
+
+const HADES_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+
+async function tryEnter() {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(doorInput.value));
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    if (hex === HADES_HASH) {
+        /* Password correct — do NOT set hades_complete yet; riddles must be completed first */
+        sessionStorage.setItem('hades_entry', '1');
+        doorFrame.style.opacity      = '0';
+        doorFrame.style.pointerEvents = 'none';
+        setTimeout(() => {
+            doorWrap.style.display = 'none';
+            showIntro();
+        }, 700);
+    } else {
+        doorInput.classList.remove('shake');
+        void doorInput.offsetWidth;
+        doorInput.classList.add('shake');
+        doorError.style.opacity = '1';
+        doorInput.value = '';
+        setTimeout(() => {
+            doorError.style.opacity = '0';
+            doorInput.classList.remove('shake');
+        }, 1400);
+    }
+}
+
+doorProceed.addEventListener('click', tryEnter);
+doorInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
+
+/* ══════════════════════════════════════
+   INTRO
+══════════════════════════════════════ */
+const introPanel = document.getElementById('introPanel');
+const introText  = document.getElementById('introText');
+const descendBtn = document.getElementById('descendBtn');
+
+function showIntro() {
+    scene.classList.add('intro-mode');
+    introPanel.classList.add('active');
+    setTimeout(() => introText.classList.add('visible'), 300);
+}
+
+function triggerDescentBurst() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const flash = document.getElementById('riddle-flash');
+    flash.style.background = 'rgba(0,0,0,1)';
+    flash.style.transition  = 'opacity 0.06s linear';
+    flash.style.opacity     = '0.96';
+    setTimeout(() => {
+        flash.style.transition = 'opacity 0.26s ease';
+        flash.style.opacity    = '0.08';
+        setTimeout(() => {
+            flash.style.transition = 'opacity 0.06s linear';
+            flash.style.opacity    = '0.72';
+            setTimeout(() => {
+                flash.style.transition = 'opacity 1.0s ease';
+                flash.style.opacity    = '0';
+            }, 65);
+        }, 265);
+    }, 70);
+}
+
+descendBtn.addEventListener('click', () => {
+    triggerDescentBurst();
+    setTimeout(() => scene.classList.remove('intro-mode'), 200);
+    introPanel.classList.remove('active');
+    setTimeout(() => {
+        introPanel.style.display = 'none';
+        startRiddles();
+    }, 900);
+});
+
+/* ══════════════════════════════════════
+   RIDDLE DATA  (SHA-256 hashes only — no plaintext answers in source)
+══════════════════════════════════════ */
+const RIDDLES = [
+    {
+        label: 'Question I of IV',
+        text:
+            'A musician entered the kingdom of the dead<br>' +
+            'carrying neither sword nor shield.<br><br>' +
+            'His music softened the hearts of spirits<br>' +
+            'and moved even the rulers below.<br><br>' +
+            'He was permitted to lead his beloved toward daylight,<br>' +
+            'provided he did not look behind him.<br><br>' +
+            'He reached the world above.<br>' +
+            'She almost did.<br><br>' +
+            'Name the woman who was lost for a second time.',
+        hashes: ['81a5c8e213ecdf4e7265d716f79383d7e074a64a6f8d4c84dfc663263ad11e3e'],
+        hints: [
+            'Her husband was Orpheus.',
+            'Her name begins with E and ends with DICE.'
+        ]
+    },
+    {
+        label: 'Question II of IV',
+        text:
+            'The wandering king sailed beyond the known sea<br>' +
+            'to a shore untouched by sunlight.<br><br>' +
+            'There he opened the earth,<br>' +
+            'poured offerings for the dead<br>' +
+            'and waited for one spirit above all others.<br><br>' +
+            'Though death had taken his sight and body,<br>' +
+            'it had not taken his gift of prophecy.<br><br>' +
+            'He warned the traveller of sacred cattle,<br>' +
+            'angered gods and the difficult road home.<br><br>' +
+            'Name the dead prophet whom Odysseus sought.',
+        hashes: ['33910afa0edc82ec8d369a3ea2a61bb18ceffcc34737b5afc1c15b4f353760ad'],
+        hints: [
+            'Odysseus met him during the journey into the Underworld.',
+            'His name begins with T and ends with SIAS.'
+        ]
+    },
+    {
+        label: 'Question III of IV',
+        text:
+            'He was born in another age<br>' +
+            'but awakened in the modern world.<br><br>' +
+            'His sister chose the Hunters<br>' +
+            'and did not return.<br><br>' +
+            'He commands the dead,<br>' +
+            'travels through shadows<br>' +
+            'and carries a sword forged from Stygian iron.<br><br>' +
+            'The children of Olympus call him<br>' +
+            'the Ghost King.<br><br>' +
+            'Name the son of Hades.',
+        hashes: [
+            'a46cb8fb7d2aa4d348d1ee1b82d577500eb5dd359761b49846342ff7a94b198e',
+            'eb5dde6e72191a3b82d2ef1aae70b9e0677d41f500f3f1101b12041908ef415e'
+        ],
+        hints: [
+            'His sister was Bianca.',
+            'His first name contains four letters.'
+        ]
+    },
+    {
+        label: 'Question IV of IV',
+        text:
+            'A king was told that his final hour had arrived.<br><br>' +
+            'Yet when Death came for him,<br>' +
+            'the king made the jailer his prisoner.<br><br>' +
+            'With Death bound,<br>' +
+            'blades wounded but did not kill,<br>' +
+            'the old did not pass<br>' +
+            'and the world could no longer end what had begun.<br><br>' +
+            'The gods eventually restored the natural order.<br><br>' +
+            'For cheating death more than once,<br>' +
+            'the king was given an endless task:<br><br>' +
+            'strength without achievement,<br>' +
+            'ascent without arrival.<br><br>' +
+            'Name the condemned king.',
+        hashes: ['75b01922b59ffb1a5930ae46c16136ed2437b37809a6f0f7c4a49817d53dc463'],
+        hints: [
+            'His punishment involves a stone and a hill.',
+            'Each time the boulder approaches the summit, it rolls back down.'
+        ]
+    }
+];
+
+const WRONG_MSGS = [
+    'the dead do not know that name',
+    'the underworld rejects your answer',
+    'that name is not written among the dead',
+    'the darkness does not recognise that soul'
+];
+
+/* ══════════════════════════════════════
+   RIDDLE ENGINE
+══════════════════════════════════════ */
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const riddlePanel      = document.getElementById('riddlePanel');
+const riddleFrame      = document.getElementById('riddleFrame');
+const riddleQLabel     = document.getElementById('riddleQLabel');
+const sealRow          = document.getElementById('sealRow');
+const riddleText       = document.getElementById('riddleText');
+const riddleHint       = document.getElementById('riddleHint');
+const riddleInput      = document.getElementById('riddleInput');
+const riddleError      = document.getElementById('riddleError');
+const riddleSubmit     = document.getElementById('riddleSubmit');
+const riddleAnswerWrap = document.getElementById('riddleAnswerWrap');
+const riddleFlashEl    = document.getElementById('riddle-flash');
+const vignette         = document.getElementById('vignette');
+
+let currentQ     = 0;
+let answerLocked = false;
+let wrongMsgIdx  = 0;
+let hintTimer1   = null;
+let hintTimer2   = null;
+
+/* ── Skull seals ── */
+function buildSeals() {
+    sealRow.innerHTML = '';
+    const ns = 'http://www.w3.org/2000/svg';
+    for (let i = 0; i < 4; i++) {
+        const svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('viewBox', '0 0 32 38');
+        svg.setAttribute('width',  '18');
+        svg.setAttribute('height', '21');
+        svg.setAttribute('id', 'seal-' + i);
+        svg.setAttribute('fill', 'none');
+        const g = document.createElementNS(ns, 'g');
+        g.classList.add('seal-skull');
+        g.setAttribute('stroke', 'rgba(136,28,16,0.36)');
+        g.setAttribute('stroke-width', '1.8');
+        g.setAttribute('stroke-linecap', 'round');
+        g.setAttribute('stroke-linejoin', 'round');
+        g.setAttribute('fill', 'rgba(136,28,16,0.06)');
+        [
+            ['path', {d:'M16,4 C8,4 5,11 5,18 C5,24 8,27 11,29 L11,34 L21,34 L21,29 C24,27 27,24 27,18 C27,11 24,4 16,4 Z'}],
+            ['ellipse', {cx:'11',cy:'18',rx:'3',ry:'4'}],
+            ['ellipse', {cx:'21',cy:'18',rx:'3',ry:'4'}],
+            ['path', {d:'M14,29 L14,34'}],
+            ['path', {d:'M18,29 L18,34'}]
+        ].forEach(([tag, attrs]) => {
+            const el = document.createElementNS(ns, tag);
+            Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v));
+            g.appendChild(el);
+        });
+        svg.appendChild(g);
+        sealRow.appendChild(svg);
+    }
+}
+
+function illuminateSeal(index) {
+    const g = document.querySelector('#seal-' + index + ' .seal-skull');
+    if (g) g.classList.add('lit');
+}
+
+/* ── Soul-flame flash ── */
+function triggerFlash(type) {
+    if (reducedMotion) return;
+    riddleFlashEl.style.background = type === 'correct'
+        ? 'rgba(140,255,180,1)'
+        : 'rgba(8,0,0,1)';
+    const strength = type === 'correct' ? '0.48' : '0.75';
+    riddleFlashEl.style.transition = 'opacity 0.06s linear';
+    riddleFlashEl.style.opacity    = strength;
+    setTimeout(() => {
+        riddleFlashEl.style.transition = 'opacity 0.65s ease';
+        riddleFlashEl.style.opacity    = '0';
+    }, 110);
+}
+
+function triggerShake() {
+    if (reducedMotion) return;
+    riddleFrame.classList.remove('shake');
+    void riddleFrame.offsetWidth;
+    riddleFrame.classList.add('shake');
+    riddleFrame.addEventListener('animationend',
+        () => riddleFrame.classList.remove('shake'), { once: true });
+}
+
+/* ── Darkness withdrawal on correct answer ── */
+function triggerVignetteWithdraw() {
+    if (reducedMotion) return;
+    vignette.style.opacity = '0.28';
+    setTimeout(() => { vignette.style.opacity = '1'; }, 350);
+}
+
+/* ── Rising soul particles ── */
+function spawnSoulRise() {
+    if (reducedMotion) return;
+    for (let i = 0; i < 16; i++) {
+        const el  = document.createElement('div');
+        el.className = 'soul';
+        const sz  = 2 + Math.random() * 4;
+        const r   = Math.random();
+        const col = r > 0.6 ? 'rgba(175,255,200,' : r > 0.3 ? 'rgba(210,250,220,' : 'rgba(245,255,245,';
+        const dx  = ((Math.random() * 80 - 40) | 0) + 'px';
+        const dy  = (-80 - (Math.random() * 100 | 0)) + 'px';
+        const dur = 1.0 + Math.random() * 0.8;
+        el.style.cssText = [
+            `width:${sz}px`, `height:${sz}px`,
+            `left:${34 + Math.random() * 32}%`,
+            `top:${40 + Math.random() * 20}%`,
+            `background:${col}0.90)`,
+            `box-shadow:0 0 ${sz * 3}px ${sz}px ${col}0.35)`,
+            `--peak:${(0.60 + Math.random() * 0.32).toFixed(2)}`,
+            `--dx:${dx}`, `--dy:${dy}`,
+            `animation-duration:${dur}s`,
+            `animation-delay:${(Math.random() * 0.20).toFixed(2)}s`
+        ].join(';');
+        scene.appendChild(el);
+        setTimeout(() => el.remove(), (dur + 0.5) * 1000);
+    }
+}
+
+/* ── Show riddle ── */
+function showRiddle(index) {
+    answerLocked = false;
+    clearTimeout(hintTimer1);
+    clearTimeout(hintTimer2);
+
+    const r = RIDDLES[index];
+    riddleQLabel.textContent = r.label;
+
+    riddleText.style.transition = 'none';
+    riddleText.style.opacity    = '0';
+    riddleHint.style.transition = 'none';
+    riddleHint.style.opacity    = '0';
+    riddleHint.innerHTML        = '';
+    riddleError.style.opacity   = '0';
+    riddleInput.value           = '';
+    riddleInput.disabled        = false;
+    riddleSubmit.disabled       = false;
+
+    setTimeout(() => {
+        riddleText.style.transition = '';
+        riddleHint.style.transition = '';
+        riddleText.innerHTML = r.text;
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            riddleText.style.opacity = '1';
+        }));
+
+        setTimeout(() => riddleInput.focus(), 60);
+
+        hintTimer1 = setTimeout(() => {
+            riddleHint.innerHTML     = r.hints[0];
+            riddleHint.style.opacity = '1';
+        }, 20000);
+        hintTimer2 = setTimeout(() => {
+            riddleHint.innerHTML = r.hints[0] + '<br>' + r.hints[1];
+        }, 45000);
+
+    }, index === 0 ? 150 : 500);
+}
+
+/* ── Check answer ── */
+async function checkAnswer() {
+    if (answerLocked) return;
+
+    const normalised = riddleInput.value
+        .trim().toUpperCase()
+        .replace(/-/g, ' ')
+        .replace(/'/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    if (!normalised) return;
+
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalised));
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+
+    if (RIDDLES[currentQ].hashes.includes(hex)) {
+        /* ── Correct ── */
+        answerLocked = true;
+        clearTimeout(hintTimer1);
+        clearTimeout(hintTimer2);
+        riddleInput.disabled  = true;
+        riddleSubmit.disabled = true;
+        riddleError.style.opacity = '0';
+
+        triggerFlash('correct');
+        triggerVignetteWithdraw();
+        spawnSoulRise();
+
+        setTimeout(() => {
+            illuminateSeal(currentQ);
+            currentQ++;
+
+            if (currentQ >= RIDDLES.length) {
+                riddleText.style.opacity = '0';
+                riddleHint.style.opacity = '0';
+                setTimeout(showCompletion, 900);
             } else {
-                doorInput.classList.remove('shake');
-                void doorInput.offsetWidth;
-                doorInput.classList.add('shake');
-                doorError.style.opacity = '1';
-                doorInput.value = '';
-                setTimeout(() => {
-                    doorError.style.opacity = '0';
-                    doorInput.classList.remove('shake');
-                }, 1400);
+                riddleText.style.opacity = '0';
+                riddleHint.style.opacity = '0';
+                setTimeout(() => showRiddle(currentQ), 650);
             }
-        }
+        }, 380);
 
-        doorProceed.addEventListener('click', tryEnter);
-        doorInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
-    </script>
+    } else {
+        /* ── Wrong ── */
+        triggerFlash('wrong');
+        triggerShake();
+
+        const msg = WRONG_MSGS[wrongMsgIdx % WRONG_MSGS.length];
+        wrongMsgIdx++;
+        riddleError.textContent   = msg;
+        riddleError.style.opacity = '1';
+        riddleInput.value         = '';
+
+        setTimeout(() => { riddleError.style.opacity = '0'; }, 2400);
+    }
+}
+
+/* ── Completion screen ── */
+function showCompletion() {
+    /* Collapse all invisible riddle elements so they don't push content down */
+    riddleAnswerWrap.style.display = 'none';
+    riddleText.style.display       = 'none';
+    riddleHint.style.display       = 'none';
+    riddleFrame.querySelectorAll('.riddle-divider')
+               .forEach(d => d.style.display = 'none');
+    riddleQLabel.textContent = 'Gates Sealed';
+
+    const compText = document.createElement('div');
+    compText.className     = 'completion-text';
+    compText.style.opacity = '0';
+    compText.innerHTML =
+        'The forgotten names have been restored.<br><br>' +
+        'The dead return to their silence.<br><br>' +
+        'The Lord Below withdraws his shadow from your House.<br><br>' +
+        'Beyond the final gate, something waits to be found.';
+    riddleFrame.insertBefore(compText, riddleAnswerWrap);
+
+    const btn = document.createElement('button');
+    btn.className     = 'door-proceed';
+    btn.textContent   = 'CROSS THE FINAL GATE';
+    btn.style.letterSpacing = '0.34em';
+    btn.style.opacity = '0';
+    btn.style.transition = 'opacity 2s ease, color 0.4s, border-color 0.4s, box-shadow 0.4s';
+    btn.addEventListener('click', crossGate);
+    riddleFrame.insertBefore(btn, riddleAnswerWrap);
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        compText.style.transition = 'opacity 2s ease';
+        compText.style.opacity    = '1';
+    }));
+    setTimeout(() => { btn.style.opacity = '1'; }, 1200);
+}
+
+/* ── Cross the final gate ── */
+function crossGate() {
+    sessionStorage.setItem('hades_complete', 'true');
+    sessionStorage.setItem('mt_key', HADES_HASH);
+    const exit = document.getElementById('exit-overlay');
+    exit.style.opacity       = '1';
+    exit.style.pointerEvents = 'all';
+    setTimeout(() => { window.location.href = 'wander.html'; }, 750);
+}
+
+/* ── Start riddle sequence (called after intro) ── */
+function startRiddles() {
+    buildSeals();
+    riddlePanel.classList.add('active');
+    setTimeout(() => showRiddle(0), 350);
+}
+
+/* ── Input events ── */
+riddleSubmit.addEventListener('click', checkAnswer);
+riddleInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
+</script>
 </body>
 </html>

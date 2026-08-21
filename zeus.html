@@ -52,6 +52,7 @@
             background: radial-gradient(ellipse, rgba(52,48,18,0.92), rgba(20,18,4,0));
             filter: blur(32px); pointer-events: none;
             animation: cloudDrift linear infinite alternate;
+            transition: opacity 1.4s ease, filter 1.4s ease;
         }
         .cloud-1 { top:5%;  left:-8%;  width:50vw; height:22vh; opacity:.90; animation-duration:55s; }
         .cloud-2 { top:18%; right:-6%; width:44vw; height:18vh; opacity:.85; animation-duration:70s; animation-delay:3s; }
@@ -111,6 +112,7 @@
                 rgba(160,140,60,0.20) 45%, rgba(160,140,60,0.20) 55%, transparent 100%);
             pointer-events: none;
             animation: windSweep linear infinite;
+            transition: opacity 1.4s ease;
         }
         .wind:nth-child(1) { top:12%; width:35%; animation-duration:3.2s; }
         .wind:nth-child(2) { top:23%; width:50%; animation-duration:2.6s; animation-delay:0.8s; }
@@ -214,16 +216,43 @@
         }
 
         /* ══════════════════════════════════════
-           RIDDLE PANEL
+           PANELS — INTRO + RIDDLE
         ══════════════════════════════════════ */
-        #riddlePanel {
+        #introPanel, #riddlePanel {
             position: absolute; inset: 0;
             display: flex; align-items: center; justify-content: center;
             z-index: 10; padding: 20px; overflow-y: auto;
             opacity: 0; pointer-events: none;
             transition: opacity 0.9s ease;
         }
-        #riddlePanel.active { opacity: 1; pointer-events: all; }
+        #introPanel.active, #riddlePanel.active { opacity: 1; pointer-events: all; }
+
+        /* ── INTRO TEXT ── */
+        .riddle-path-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.72rem, 1.7vw, 0.98rem);
+            letter-spacing: 0.46em; text-transform: uppercase;
+            color: rgba(190,158,48,0.78); text-align: center;
+        }
+        .intro-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.67rem, 1.32vw, 0.86rem);
+            line-height: 2.3; letter-spacing: 0.07em;
+            color: rgba(185,155,60,0.82); text-align: center;
+            opacity: 0; transition: opacity 1.6s ease;
+        }
+        .intro-text.visible { opacity: 1; }
+
+        /* ── INTRO MODE — storm restrained while intro is visible ── */
+        .scene.intro-mode #bolt-svg        { opacity: 0 !important; animation: none !important; }
+        .scene.intro-mode #lightning-flash { opacity: 0 !important; animation: none !important; }
+        .scene.intro-mode .wind            { opacity: 0.18 !important; }
+        .scene.intro-mode .cloud           { opacity: 0.45 !important; filter: blur(42px) !important; }
+
+        @keyframes stormBorderPulse {
+            from { box-shadow: 0 0 35px rgba(200,170,40,0.05), inset 0 0 55px rgba(80,60,0,0.08); }
+            to   { box-shadow: 0 0 72px rgba(200,170,40,0.13), inset 0 0 80px rgba(80,60,0,0.14); }
+        }
 
         .riddle-frame {
             display: flex; flex-direction: column; align-items: center;
@@ -233,8 +262,9 @@
             background: rgba(4,3,0,0.82);
             box-shadow: 0 0 90px rgba(200,170,40,0.07), inset 0 0 70px rgba(80,60,0,0.10);
             gap: 22px;
-            max-height: 90vh; overflow-y: auto;
+            max-height: 90dvh; overflow-y: auto;
             scrollbar-width: none;
+            animation: stormBorderPulse 6s ease-in-out infinite alternate;
         }
         .riddle-frame::-webkit-scrollbar { display: none; }
 
@@ -318,6 +348,7 @@
             .door-proceed { font-size: 0.70rem; letter-spacing: 0.28em; padding: 0.65em 1.8em; }
             .riddle-frame { padding: 22px 22px 28px; gap: 18px; width: clamp(260px,90vw,440px); }
             .riddle-text  { font-size: 0.67rem; line-height: 2.0; }
+            .intro-text   { font-size: 0.67rem; }
             .seal-row     { gap: 20px; }
         }
 
@@ -325,9 +356,10 @@
         @media (prefers-reduced-motion: reduce) {
             .scene, .cloud, .yellow-haze, #bolt-svg,
             #lightning-flash, .wind { animation: none !important; }
-            .riddle-text, .riddle-hint,
+            .riddle-text, .riddle-hint, .intro-text,
             .completion-text, .seal-bolt { transition: none !important; }
             .riddle-frame { animation: none !important; }
+            .cloud, .wind { transition: none !important; }
         }
     </style>
 </head>
@@ -375,6 +407,25 @@
                     <div class="door-error" id="doorError">denied</div>
                     <button class="door-proceed" id="doorProceed">proceed</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- INTRO PANEL -->
+        <div id="introPanel">
+            <div class="riddle-frame">
+                <div class="riddle-path-title">The Judgment of the Sky</div>
+                <div class="riddle-divider"></div>
+                <div class="intro-text" id="introText">
+                    The sky has witnessed your arrival.<br><br>
+                    But no mortal enters the domain of the Thunderer without judgment.<br><br>
+                    Above you stands the throne that survived Titans, giants and the passing of ages.
+                    Before you lies a path guarded by stories of succession, wandering, betrayal and forbidden fire.<br><br>
+                    Four truths stand between your House and the final threshold.<br><br>
+                    Answer carefully.<br><br>
+                    The sky hears every word.
+                </div>
+                <div class="riddle-divider"></div>
+                <button class="door-proceed" id="faceStormBtn">Face the Storm</button>
             </div>
         </div>
 
@@ -431,7 +482,7 @@ async function tryEnter() {
         doorFrame.style.pointerEvents = 'none';
         setTimeout(() => {
             doorWrap.style.display = 'none';
-            startRiddles();
+            showIntro();
         }, 700);
     } else {
         doorInput.classList.remove('shake');
@@ -448,6 +499,49 @@ async function tryEnter() {
 
 doorProceed.addEventListener('click', tryEnter);
 doorInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
+
+/* ══════════════════════════════════════
+   INTRO
+══════════════════════════════════════ */
+const introPanel   = document.getElementById('introPanel');
+const introText    = document.getElementById('introText');
+const faceStormBtn = document.getElementById('faceStormBtn');
+
+function showIntro() {
+    document.getElementById('scene').classList.add('intro-mode');
+    introPanel.classList.add('active');
+    setTimeout(() => introText.classList.add('visible'), 300);
+}
+
+function triggerStormBurst() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const flash = document.getElementById('riddle-flash');
+    flash.style.background = 'rgba(255,248,200,1)';
+    flash.style.transition  = 'opacity 0.05s linear';
+    flash.style.opacity     = '0.95';
+    setTimeout(() => {
+        flash.style.transition = 'opacity 0.22s ease';
+        flash.style.opacity    = '0.10';
+        setTimeout(() => {
+            flash.style.transition = 'opacity 0.05s linear';
+            flash.style.opacity    = '0.72';
+            setTimeout(() => {
+                flash.style.transition = 'opacity 0.90s ease';
+                flash.style.opacity    = '0';
+            }, 70);
+        }, 230);
+    }, 65);
+}
+
+faceStormBtn.addEventListener('click', () => {
+    triggerStormBurst();
+    setTimeout(() => document.getElementById('scene').classList.remove('intro-mode'), 180);
+    introPanel.classList.remove('active');
+    setTimeout(() => {
+        introPanel.style.display = 'none';
+        startRiddles();
+    }, 900);
+});
 
 /* ══════════════════════════════════════
    RIDDLE DATA
@@ -702,8 +796,10 @@ async function checkAnswer() {
 
 /* ── Completion screen ── */
 function showCompletion() {
-    /* Hide answer block and spare dividers */
+    /* Collapse all invisible riddle elements so they don't push content down */
     riddleAnswerWrap.style.display = 'none';
+    riddleText.style.display       = 'none';
+    riddleHint.style.display       = 'none';
     riddleFrame.querySelectorAll('.riddle-divider')
                .forEach(d => d.style.display = 'none');
 

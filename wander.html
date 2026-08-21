@@ -456,8 +456,10 @@
 <script>
 /* ── ACCESS GATE ── */
 (function () {
-    const key = sessionStorage.getItem('mt_key');
-    if (key !== '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4') {
+    const zeusOk     = sessionStorage.getItem('zeus_complete')     === '1';
+    const poseidonOk = sessionStorage.getItem('poseidon_complete') === 'true';
+    const hadesOk    = sessionStorage.getItem('hades_complete')    === 'true';
+    if (!zeusOk && !poseidonOk && !hadesOk) {
         window.location.replace('index.html');
     }
 })();
