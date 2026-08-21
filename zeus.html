@@ -14,7 +14,7 @@
             background: #050400;
         }
 
-        /* ── SCENE ENTER — arrive in blinding flash, storm settles ── */
+        /* ── SCENE ENTER ── */
         .scene {
             position: relative;
             width: 100vw; height: 100vh;
@@ -26,27 +26,17 @@
             to   { filter: brightness(1) blur(0);    transform: scale(1)   translateY(0); }
         }
 
-        /* ── STORM SKY BACKGROUND — sickly pre-storm amber/olive ── */
+        /* ── STORM SKY ── */
         .storm-bg {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: linear-gradient(
                 to bottom,
-                #040300  0%,
-                #0a0900  14%,
-                #100e02  28%,
-                #181504  44%,
-                #1e1b06  60%,
-                #141208  76%,
-                #0c0a04  90%,
-                #060500  100%
+                #040300 0%, #0a0900 14%, #100e02 28%, #181504 44%,
+                #1e1b06 60%, #141208 76%, #0c0a04 90%, #060500 100%
             );
         }
-
-        /* Sickly sulphurous haze that hangs in the mid-sky */
         .yellow-haze {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background:
                 radial-gradient(ellipse at 50% 38%, rgba(80,72,0,0.22) 0%, transparent 65%),
                 radial-gradient(ellipse at 20% 55%, rgba(60,52,0,0.12) 0%, transparent 50%),
@@ -54,86 +44,82 @@
             pointer-events: none;
             animation: hazePulse 9s ease-in-out infinite alternate;
         }
-        @keyframes hazePulse {
-            from { opacity: 0.7; }
-            to   { opacity: 1;   }
-        }
+        @keyframes hazePulse { from { opacity: 0.7; } to { opacity: 1; } }
 
-        /* ── STORM CLOUDS — heavy, dark olive/khaki, pre-apocalyptic ── */
+        /* ── CLOUDS ── */
         .cloud {
-            position: absolute;
-            border-radius: 50%;
+            position: absolute; border-radius: 50%;
             background: radial-gradient(ellipse, rgba(52,48,18,0.92), rgba(20,18,4,0));
-            filter: blur(32px);
-            pointer-events: none;
+            filter: blur(32px); pointer-events: none;
             animation: cloudDrift linear infinite alternate;
         }
-        .cloud-1  { top: 5%;  left: -8%;  width: 50vw; height: 22vh; opacity: 0.90; animation-duration: 55s; }
-        .cloud-2  { top: 18%; right: -6%; width: 44vw; height: 18vh; opacity: 0.85; animation-duration: 70s; animation-delay: 3s; }
-        .cloud-3  { top: 10%; left: 28%;  width: 36vw; height: 16vh; opacity: 0.80; animation-duration: 48s; animation-delay: 8s; }
-        .cloud-4  { top: 34%; left: -5%;  width: 55vw; height: 24vh; opacity: 0.88; animation-duration: 82s; animation-delay: 2s; }
-        .cloud-5  { top: 42%; right: -4%; width: 48vw; height: 20vh; opacity: 0.82; animation-duration: 63s; animation-delay: 5s; }
-        .cloud-6  { top: 28%; left: 48%;  width: 32vw; height: 14vh; opacity: 0.75; animation-duration: 44s; animation-delay: 11s; }
-        .cloud-7  { top: 56%; left: 10%;  width: 60vw; height: 26vh; opacity: 0.90; animation-duration: 90s; animation-delay: 1s; }
-        .cloud-8  { top: 0%;  left: 60%;  width: 42vw; height: 18vh; opacity: 0.70; animation-duration: 58s; animation-delay: 7s; }
+        .cloud-1 { top:5%;  left:-8%;  width:50vw; height:22vh; opacity:.90; animation-duration:55s; }
+        .cloud-2 { top:18%; right:-6%; width:44vw; height:18vh; opacity:.85; animation-duration:70s; animation-delay:3s; }
+        .cloud-3 { top:10%; left:28%;  width:36vw; height:16vh; opacity:.80; animation-duration:48s; animation-delay:8s; }
+        .cloud-4 { top:34%; left:-5%;  width:55vw; height:24vh; opacity:.88; animation-duration:82s; animation-delay:2s; }
+        .cloud-5 { top:42%; right:-4%; width:48vw; height:20vh; opacity:.82; animation-duration:63s; animation-delay:5s; }
+        .cloud-6 { top:28%; left:48%;  width:32vw; height:14vh; opacity:.75; animation-duration:44s; animation-delay:11s; }
+        .cloud-7 { top:56%; left:10%;  width:60vw; height:26vh; opacity:.90; animation-duration:90s; animation-delay:1s; }
+        .cloud-8 { top:0%;  left:60%;  width:42vw; height:18vh; opacity:.70; animation-duration:58s; animation-delay:7s; }
         @keyframes cloudDrift {
-            from { transform: translateX(0)    scaleY(1);    }
-            to   { transform: translateX(5vw)  scaleY(1.06); }
+            from { transform: translateX(0)   scaleY(1);    }
+            to   { transform: translateX(5vw) scaleY(1.06); }
         }
 
-        /* ── LIGHTNING BOLT SVG (appears during flash) ── */
+        /* ── BOLT ── */
         #bolt-svg {
-            position: absolute;
-            top: 8%; right: 24%;
-            width: clamp(40px, 6vw, 80px);
+            position: absolute; top:8%; right:24%;
+            width: clamp(40px,6vw,80px);
             opacity: 0;
             filter: drop-shadow(0 0 18px rgba(255,240,140,0.9));
             pointer-events: none;
             animation: boltAppear 10s 4s ease-in-out infinite;
         }
         @keyframes boltAppear {
-            0%, 78%, 84%, 88%, 94%, 100% { opacity: 0; }
-            80%  { opacity: 0.95; }
-            82%  { opacity: 0; }
-            86%  { opacity: 0.70; }
-            90%  { opacity: 0; }
-            96%  { opacity: 0.50; }
+            0%,78%,84%,88%,94%,100% { opacity:0; }
+            80% { opacity:0.95; } 82% { opacity:0; }
+            86% { opacity:0.70; } 90% { opacity:0; }
+            96% { opacity:0.50; }
         }
 
-        /* ── LIGHTNING FLASH — sulphurous yellow-white strobe ── */
+        /* ── AMBIENT FLASH ── */
         #lightning-flash {
-            position: absolute;
-            inset: 0;
-            background: rgba(255, 248, 200, 1);
-            opacity: 0;
-            pointer-events: none;
+            position: absolute; inset: 0;
+            background: rgba(255,248,200,1);
+            opacity: 0; pointer-events: none;
             animation: stormFlash 10s 4s ease-in-out infinite;
         }
         @keyframes stormFlash {
-            0%, 78%, 84%, 88%, 94%, 100% { opacity: 0; }
-            80%  { opacity: 0.80; }
-            82%  { opacity: 0; }
-            86%  { opacity: 0.55; }
-            90%  { opacity: 0; }
-            96%  { opacity: 0.35; }
+            0%,78%,84%,88%,94%,100% { opacity:0; }
+            80% { opacity:0.80; } 82% { opacity:0; }
+            86% { opacity:0.55; } 90% { opacity:0; }
+            96% { opacity:0.35; }
         }
 
-        /* ── WIND STREAKS — warm amber tint ── */
+        /* ── RIDDLE FEEDBACK FLASH (above panel) ── */
+        #riddle-flash {
+            position: absolute; inset: 0;
+            background: rgba(255,248,200,1);
+            opacity: 0; pointer-events: none;
+            z-index: 15;
+        }
+
+        /* ── WIND ── */
         .wind {
-            position: absolute;
-            height: 1px;
-            background: linear-gradient(to right, transparent 0%, rgba(160,140,60,0.20) 45%, rgba(160,140,60,0.20) 55%, transparent 100%);
+            position: absolute; height: 1px;
+            background: linear-gradient(to right, transparent 0%,
+                rgba(160,140,60,0.20) 45%, rgba(160,140,60,0.20) 55%, transparent 100%);
             pointer-events: none;
             animation: windSweep linear infinite;
         }
-        .wind:nth-child(1)  { top: 12%; width: 35%; animation-duration: 3.2s; animation-delay: 0s; }
-        .wind:nth-child(2)  { top: 23%; width: 50%; animation-duration: 2.6s; animation-delay: 0.8s; }
-        .wind:nth-child(3)  { top: 35%; width: 28%; animation-duration: 4.1s; animation-delay: 1.5s; }
-        .wind:nth-child(4)  { top: 47%; width: 42%; animation-duration: 2.9s; animation-delay: 0.3s; }
-        .wind:nth-child(5)  { top: 58%; width: 38%; animation-duration: 3.6s; animation-delay: 1.1s; }
-        .wind:nth-child(6)  { top: 70%; width: 55%; animation-duration: 2.4s; animation-delay: 0.6s; }
-        .wind:nth-child(7)  { top: 80%; width: 30%; animation-duration: 3.8s; animation-delay: 1.9s; }
-        .wind:nth-child(8)  { top: 6%;  width: 45%; animation-duration: 2.8s; animation-delay: 2.2s; }
+        .wind:nth-child(1) { top:12%; width:35%; animation-duration:3.2s; }
+        .wind:nth-child(2) { top:23%; width:50%; animation-duration:2.6s; animation-delay:0.8s; }
+        .wind:nth-child(3) { top:35%; width:28%; animation-duration:4.1s; animation-delay:1.5s; }
+        .wind:nth-child(4) { top:47%; width:42%; animation-duration:2.9s; animation-delay:0.3s; }
+        .wind:nth-child(5) { top:58%; width:38%; animation-duration:3.6s; animation-delay:1.1s; }
+        .wind:nth-child(6) { top:70%; width:55%; animation-duration:2.4s; animation-delay:0.6s; }
+        .wind:nth-child(7) { top:80%; width:30%; animation-duration:3.8s; animation-delay:1.9s; }
+        .wind:nth-child(8) { top:6%;  width:45%; animation-duration:2.8s; animation-delay:2.2s; }
         @keyframes windSweep {
             from { transform: translateX(-120%); }
             to   { transform: translateX(240%); }
@@ -141,126 +127,207 @@
 
         /* ── VIGNETTE ── */
         .vignette {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: radial-gradient(ellipse at center, transparent 28%, rgba(0,2,6,0.80) 100%);
             pointer-events: none;
         }
 
-        /* ── DOORWAY ── */
+        /* ══════════════════════════════════════
+           DOOR
+        ══════════════════════════════════════ */
         .door-wrap {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
         }
         .door-frame {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: clamp(240px, 32vw, 340px);
+            display: flex; flex-direction: column; align-items: center;
+            width: clamp(240px,32vw,340px);
             opacity: 0;
             animation: doorReveal 1s 1.5s ease-out forwards;
+            transition: opacity 0.7s ease;
         }
         @keyframes doorReveal {
-            from { opacity: 0; transform: translateY(10px); }
-            to   { opacity: 1; transform: translateY(0); }
+            from { opacity:0; transform:translateY(10px); }
+            to   { opacity:1; transform:translateY(0); }
         }
         .door-arch {
-            width: 100%;
-            height: clamp(130px, 17vw, 200px);
-            border: 1px solid #5a4410;
-            border-bottom: none;
+            width: 100%; height: clamp(130px,17vw,200px);
+            border: 1px solid #5a4410; border-bottom: none;
             border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #705818;
-            background: rgba(4,3,0,0.40);
+            display: flex; align-items: center; justify-content: center;
+            color: #705818; background: rgba(4,3,0,0.40);
             box-shadow: 0 0 28px rgba(200,170,40,0.14), inset 0 0 40px rgba(80,60,0,0.10);
         }
         .door-body {
-            width: 100%;
-            border: 1px solid #5a4410;
-            border-top: none;
+            width: 100%; border: 1px solid #5a4410; border-top: none;
             padding: 24px 30px 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
+            display: flex; flex-direction: column; align-items: center; gap: 16px;
             background: rgba(4,3,0,0.40);
         }
         .door-input {
-            font-family: 'Cinzel', serif;
-            font-size: 0.88rem;
-            letter-spacing: 0.5em;
-            text-align: center;
-            color: #b09030;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #5a4410;
-            width: 100%;
-            padding: 8px 0;
-            outline: none;
+            font-family: 'Cinzel', serif; font-size: 0.88rem;
+            letter-spacing: 0.5em; text-align: center;
+            color: #b09030; background: transparent;
+            border: none; border-bottom: 1px solid #5a4410;
+            width: 100%; padding: 8px 0; outline: none;
             caret-color: #b09030;
         }
         .door-input::placeholder { color: rgba(176,144,48,0.3); }
         .door-error {
-            font-family: 'Cinzel', serif;
-            font-size: 0.66rem;
-            letter-spacing: 0.32em;
-            text-transform: uppercase;
+            font-family: 'Cinzel', serif; font-size: 0.66rem;
+            letter-spacing: 0.32em; text-transform: uppercase;
             color: rgba(220,180,60,0.85);
-            opacity: 0;
-            transition: opacity 0.3s;
-            min-height: 16px;
+            opacity: 0; transition: opacity 0.3s; min-height: 16px;
+            text-align: center;
         }
         .door-proceed {
             font-family: 'Cinzel', serif;
-            font-size: clamp(0.70rem, 1.5vw, 0.85rem);
-            letter-spacing: 0.38em;
-            text-transform: uppercase;
-            color: #b09030;
-            background: transparent;
+            font-size: clamp(0.70rem,1.5vw,0.85rem);
+            letter-spacing: 0.38em; text-transform: uppercase;
+            color: #b09030; background: transparent;
             border: 1px solid #5a4410;
-            padding: 0.75em 2.4em;
-            cursor: pointer;
+            padding: 0.75em 2.4em; cursor: pointer;
             transition: color 0.4s, border-color 0.4s, box-shadow 0.4s;
             margin-top: 4px;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation; -webkit-tap-highlight-color: transparent;
         }
         .door-proceed:hover {
-            color: #e8cc60;
-            border-color: #907820;
+            color: #e8cc60; border-color: #907820;
             box-shadow: 0 0 22px rgba(200,170,40,0.38);
         }
+        .door-proceed:disabled {
+            opacity: 0.35; cursor: default;
+            box-shadow: none; border-color: #5a4410; color: #b09030;
+        }
         @keyframes inputShake {
-            0%, 100% { transform: translateX(0); }
-            20%       { transform: translateX(-6px); }
-            40%       { transform: translateX(6px); }
-            60%       { transform: translateX(-4px); }
-            80%       { transform: translateX(4px); }
+            0%,100% { transform:translateX(0); }
+            20% { transform:translateX(-6px); } 40% { transform:translateX(6px); }
+            60% { transform:translateX(-4px); } 80% { transform:translateX(4px); }
         }
         .door-input.shake { animation: inputShake 0.45s ease-in-out; }
 
         /* ── EXIT OVERLAY ── */
         #exit-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 999;
-            background: #000;
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; inset: 0; z-index: 999;
+            background: #000; opacity: 0; pointer-events: none;
             transition: opacity 0.7s ease;
         }
 
+        /* ══════════════════════════════════════
+           RIDDLE PANEL
+        ══════════════════════════════════════ */
+        #riddlePanel {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10; padding: 20px; overflow-y: auto;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.9s ease;
+        }
+        #riddlePanel.active { opacity: 1; pointer-events: all; }
+
+        .riddle-frame {
+            display: flex; flex-direction: column; align-items: center;
+            width: clamp(280px,58vw,620px);
+            padding: 32px 40px 38px;
+            border: 1px solid rgba(90,68,16,0.65);
+            background: rgba(4,3,0,0.82);
+            box-shadow: 0 0 90px rgba(200,170,40,0.07), inset 0 0 70px rgba(80,60,0,0.10);
+            gap: 22px;
+            max-height: 90vh; overflow-y: auto;
+            scrollbar-width: none;
+        }
+        .riddle-frame::-webkit-scrollbar { display: none; }
+
+        /* Wrong-answer shake on the frame */
+        @keyframes frameShake {
+            0%,100% { transform:translateX(0); }
+            15% { transform:translateX(-7px); } 30% { transform:translateX(7px); }
+            45% { transform:translateX(-4px); } 60% { transform:translateX(4px); }
+            80% { transform:translateX(-2px); }
+        }
+        .riddle-frame.shake { animation: frameShake 0.45s ease-in-out; }
+
+        /* Progress seals */
+        .seal-row { display:flex; gap:28px; justify-content:center; align-items:center; }
+        .seal-bolt {
+            fill: rgba(180,140,30,0.18);
+            transition: fill 1.2s ease, filter 1.2s ease;
+        }
+        .seal-bolt.lit {
+            fill: rgba(255,240,120,0.96);
+            filter: drop-shadow(0 0 8px rgba(255,230,80,0.80))
+                    drop-shadow(0 0 24px rgba(255,210,40,0.45));
+        }
+
+        /* Divider */
+        .riddle-divider {
+            width: 52%; height: 1px; flex-shrink: 0;
+            background: linear-gradient(to right, transparent, rgba(180,140,30,0.32), transparent);
+        }
+
+        /* Question label */
+        .riddle-q-label {
+            font-family: 'Cinzel', serif; font-size: 0.55rem;
+            letter-spacing: 0.55em; text-transform: uppercase;
+            color: rgba(155,125,38,0.40);
+        }
+
+        /* Riddle body text */
+        .riddle-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.68rem,1.35vw,0.88rem);
+            line-height: 2.15; letter-spacing: 0.07em;
+            color: rgba(200,168,70,0.88); text-align: center;
+            transition: opacity 1.3s ease;
+        }
+
+        /* Hint */
+        .riddle-hint {
+            font-family: 'Cinzel', serif; font-size: 0.60rem;
+            letter-spacing: 0.18em; line-height: 2.0;
+            color: rgba(165,135,52,0.46); text-align: center;
+            min-height: 18px;
+            transition: opacity 2s ease;
+        }
+
+        /* Answer block */
+        .riddle-answer-wrap {
+            width: 100%; display: flex; flex-direction: column;
+            align-items: center; gap: 14px;
+        }
+        #riddleInput {
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+        }
+        #riddleInput::placeholder { text-transform: none; letter-spacing: 0.5em; }
+
+        /* Completion text */
+        .completion-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.74rem,1.55vw,0.96rem);
+            line-height: 2.4; letter-spacing: 0.10em;
+            color: rgba(218,182,78,0.92); text-align: center;
+            transition: opacity 2s ease;
+        }
+
+        /* ── MOBILE ── */
         @media (max-width: 600px) {
-            .door-frame   { width: clamp(170px, 72vw, 230px); }
+            .door-frame   { width: clamp(170px,72vw,230px); }
             .door-arch    { height: 88px; }
             .door-body    { padding: 16px 20px 20px; gap: 12px; }
             .door-proceed { font-size: 0.70rem; letter-spacing: 0.28em; padding: 0.65em 1.8em; }
+            .riddle-frame { padding: 22px 22px 28px; gap: 18px; width: clamp(260px,90vw,440px); }
+            .riddle-text  { font-size: 0.67rem; line-height: 2.0; }
+            .seal-row     { gap: 20px; }
+        }
+
+        /* ── REDUCED MOTION ── */
+        @media (prefers-reduced-motion: reduce) {
+            .scene, .cloud, .yellow-haze, #bolt-svg,
+            #lightning-flash, .wind { animation: none !important; }
+            .riddle-text, .riddle-hint,
+            .completion-text, .seal-bolt { transition: none !important; }
+            .riddle-frame { animation: none !important; }
         }
     </style>
 </head>
@@ -271,7 +338,6 @@
         <div class="storm-bg"></div>
         <div class="yellow-haze"></div>
 
-        <!-- Storm clouds -->
         <div class="cloud cloud-1"></div>
         <div class="cloud cloud-2"></div>
         <div class="cloud cloud-3"></div>
@@ -281,27 +347,22 @@
         <div class="cloud cloud-7"></div>
         <div class="cloud cloud-8"></div>
 
-        <!-- Wind -->
-        <div class="wind"></div>
-        <div class="wind"></div>
-        <div class="wind"></div>
-        <div class="wind"></div>
-        <div class="wind"></div>
-        <div class="wind"></div>
-        <div class="wind"></div>
-        <div class="wind"></div>
+        <div class="wind"></div><div class="wind"></div>
+        <div class="wind"></div><div class="wind"></div>
+        <div class="wind"></div><div class="wind"></div>
+        <div class="wind"></div><div class="wind"></div>
 
-        <!-- Lightning bolt SVG -->
         <svg id="bolt-svg" viewBox="0 0 50 95" fill="rgba(255,240,160,0.95)" xmlns="http://www.w3.org/2000/svg">
             <polygon points="36,3 13,50 27,50 17,92 44,42 29,42 48,3"/>
         </svg>
 
-        <!-- Full-sky flash -->
         <div id="lightning-flash"></div>
+        <div id="riddle-flash"></div>
 
         <div class="vignette"></div>
 
-        <div class="door-wrap">
+        <!-- DOOR -->
+        <div class="door-wrap" id="doorWrap">
             <div class="door-frame" id="doorFrame">
                 <div class="door-arch">
                     <svg viewBox="0 0 22 40" width="28" height="52" fill="currentColor" opacity="0.50">
@@ -309,58 +370,394 @@
                     </svg>
                 </div>
                 <div class="door-body">
-                    <input type="password" class="door-input" id="doorInput" placeholder="· · · ·" maxlength="12" autocomplete="off">
+                    <input type="password" class="door-input" id="doorInput"
+                        placeholder="· · · ·" maxlength="12" autocomplete="off">
                     <div class="door-error" id="doorError">denied</div>
                     <button class="door-proceed" id="doorProceed">proceed</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        /* ── RANDOMISE LIGHTNING BOLT POSITION on each animation cycle ── */
-        const bolt = document.getElementById('bolt-svg');
+        <!-- RIDDLE PANEL -->
+        <div id="riddlePanel">
+            <div class="riddle-frame" id="riddleFrame">
+                <div class="riddle-q-label" id="riddleQLabel"></div>
+                <div class="seal-row" id="sealRow"></div>
+                <div class="riddle-divider"></div>
+                <div class="riddle-text" id="riddleText" style="opacity:0"></div>
+                <div class="riddle-divider"></div>
+                <div class="riddle-hint" id="riddleHint" style="opacity:0"></div>
+                <div class="riddle-answer-wrap" id="riddleAnswerWrap">
+                    <input type="text" class="door-input" id="riddleInput"
+                        placeholder="your answer"
+                        autocomplete="off" spellcheck="false"
+                        autocorrect="off" autocapitalize="characters">
+                    <div class="door-error" id="riddleError">&nbsp;</div>
+                    <button class="door-proceed" id="riddleSubmit">answer</button>
+                </div>
+            </div>
+        </div>
 
-        function moveBolt() {
-            bolt.style.top   = (4  + Math.random() * 40 | 0) + '%';
-            bolt.style.left  = (8  + Math.random() * 68 | 0) + '%';
-            bolt.style.right = 'auto';
-        }
+    </div><!-- /.scene -->
 
-        // Fire once when the animation begins (after its 4s delay)
-        // then on every subsequent iteration
-        bolt.addEventListener('animationstart',     moveBolt);
-        bolt.addEventListener('animationiteration', moveBolt);
+<script>
+/* ── BOLT ANIMATION ── */
+const bolt = document.getElementById('bolt-svg');
+function moveBolt() {
+    bolt.style.top   = (4  + Math.random() * 40 | 0) + '%';
+    bolt.style.left  = (8  + Math.random() * 68 | 0) + '%';
+    bolt.style.right = 'auto';
+}
+bolt.addEventListener('animationstart',     moveBolt);
+bolt.addEventListener('animationiteration', moveBolt);
 
-        /* ── DOORWAY ── */
-        const doorInput   = document.getElementById('doorInput');
-        const doorError   = document.getElementById('doorError');
-        const doorProceed = document.getElementById('doorProceed');
+/* ══════════════════════════════════════
+   DOOR
+══════════════════════════════════════ */
+const doorInput   = document.getElementById('doorInput');
+const doorError   = document.getElementById('doorError');
+const doorProceed = document.getElementById('doorProceed');
+const doorWrap    = document.getElementById('doorWrap');
+const doorFrame   = document.getElementById('doorFrame');
 
-        async function tryEnter() {
-            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(doorInput.value));
-            const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-            if (hex === '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4') {
-                sessionStorage.setItem('mt_key', hex);
-                const exit = document.getElementById('exit-overlay');
-                exit.style.opacity = '1';
-                exit.style.pointerEvents = 'all';
-                setTimeout(() => { window.location.href = 'wander.html'; }, 750);
+const ZEUS_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+
+async function tryEnter() {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(doorInput.value));
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    if (hex === ZEUS_HASH) {
+        /* Password correct — do NOT set mt_key yet; riddles must be completed first */
+        doorFrame.style.opacity = '0';
+        doorFrame.style.pointerEvents = 'none';
+        setTimeout(() => {
+            doorWrap.style.display = 'none';
+            startRiddles();
+        }, 700);
+    } else {
+        doorInput.classList.remove('shake');
+        void doorInput.offsetWidth;
+        doorInput.classList.add('shake');
+        doorError.style.opacity = '1';
+        doorInput.value = '';
+        setTimeout(() => {
+            doorError.style.opacity = '0';
+            doorInput.classList.remove('shake');
+        }, 1400);
+    }
+}
+
+doorProceed.addEventListener('click', tryEnter);
+doorInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
+
+/* ══════════════════════════════════════
+   RIDDLE DATA
+══════════════════════════════════════ */
+const RIDDLES = [
+    {
+        label: 'Question I of IV',
+        text:
+            'A father feared that his children would someday take his throne.<br>' +
+            'So, one by one, he swallowed them.<br><br>' +
+            'But the youngest was hidden,<br>' +
+            'and a stone wrapped like an infant took his place.<br><br>' +
+            'Years later, the hidden child returned,<br>' +
+            'and the swallowed children rose again.<br><br>' +
+            'Name the father who swallowed his children.',
+        hashes: ['6cbb20ba829d85a415834e33cd517ddb29e2e6ef7c6f453f49a38ce7b17f578c','4038ca509e5c05094418e53d77432d54016cb48edba7ad410cec1ca7ed9a3154'],
+        hints: [
+            'His own father was Uranus.',
+            'He was the father of Zeus, Poseidon and Hades.'
+        ]
+    },
+    {
+        label: 'Question II of IV',
+        text:
+            'A king welcomed the wandering hero<br>' +
+            'and trapped every hostile wind inside a leather bag.<br><br>' +
+            'Only the wind that could carry the ship home was left free.<br><br>' +
+            'With Ithaca almost within sight,<br>' +
+            'suspicious hands opened the forbidden gift,<br>' +
+            'and home disappeared once more.<br><br>' +
+            'Name the keeper of the winds who gave Odysseus the bag.',
+        hashes: ['c4bad195a58ce20e43c23d2f76940f5e77c4a8e7f417e84db81d17374e717816'],
+        hints: [
+            'His island was called Aeolia.',
+            'His name begins with A and ends with LUS.'
+        ]
+    },
+    {
+        label: 'Question III of IV',
+        text:
+            'The son of the sea was accused<br>' +
+            'when the weapon of the sky disappeared.<br><br>' +
+            'But another demigod had carried out the theft:<br><br>' +
+            'a son of the messenger god,<br>' +
+            'a friend who would become an enemy,<br>' +
+            'and the owner of a blade named Backbiter.<br><br>' +
+            'Name the true thief.',
+        hashes: ['d40e6e0d38d066efd5d0eb872c5095691a244ded61960e44a1f042ba9d285bc9','4ec2f46a37a080cb369c6413a6ba60e695fa8857bce8bbf95ab23aa3ec6ec476'],
+        hints: [
+            'His father is Hermes.',
+            'His first name has four letters.'
+        ]
+    },
+    {
+        label: 'Question IV of IV',
+        text:
+            'The sky possessed what humanity lacked.<br><br>' +
+            'One Titan stole it,<br>' +
+            'concealed it inside a hollow stalk,<br>' +
+            'and carried its light down to mortals.<br><br>' +
+            'Zeus answered with chains, a mountain<br>' +
+            'and an eagle that returned each day<br>' +
+            'to consume what healed each night.<br><br>' +
+            'Name the Titan.',
+        hashes: ['dc1078f23ebdf0e5c2a77fb4a88b035fcbc2b4ced299b802244d61763f1d9d41'],
+        hints: [
+            'Heracles eventually freed him.',
+            'His name begins with P and means "forethought."'
+        ]
+    }
+];
+
+const WRONG_MSGS = [
+    'the storm does not know that name',
+    'olympus remains unmoved',
+    'lightning strikes the unworthy',
+    'the sky rejects your answer'
+];
+
+/* ══════════════════════════════════════
+   RIDDLE ENGINE
+══════════════════════════════════════ */
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const riddlePanel      = document.getElementById('riddlePanel');
+const riddleFrame      = document.getElementById('riddleFrame');
+const riddleQLabel     = document.getElementById('riddleQLabel');
+const sealRow          = document.getElementById('sealRow');
+const riddleText       = document.getElementById('riddleText');
+const riddleHint       = document.getElementById('riddleHint');
+const riddleInput      = document.getElementById('riddleInput');
+const riddleError      = document.getElementById('riddleError');
+const riddleSubmit     = document.getElementById('riddleSubmit');
+const riddleAnswerWrap = document.getElementById('riddleAnswerWrap');
+const riddleFlashEl    = document.getElementById('riddle-flash');
+
+let currentQ     = 0;
+let answerLocked = false;
+let wrongMsgIdx  = 0;
+let hintTimer1   = null;
+let hintTimer2   = null;
+
+/* ── Seals ── */
+function buildSeals() {
+    sealRow.innerHTML = '';
+    for (let i = 0; i < 4; i++) {
+        const svg  = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 22 40');
+        svg.setAttribute('width',  '17');
+        svg.setAttribute('height', '31');
+        svg.setAttribute('id', 'seal-' + i);
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        poly.setAttribute('points', '15,2 6,20 12,20 8,38 20,18 13,18 21,2');
+        poly.classList.add('seal-bolt');
+        svg.appendChild(poly);
+        sealRow.appendChild(svg);
+    }
+}
+
+function illuminateSeal(index) {
+    const poly = document.querySelector('#seal-' + index + ' .seal-bolt');
+    if (poly) poly.classList.add('lit');
+}
+
+/* ── Flash effects ── */
+function triggerFlash(strength) {
+    if (reducedMotion) return;
+    riddleFlashEl.style.transition = 'opacity 0.06s linear';
+    riddleFlashEl.style.opacity    = strength;
+    setTimeout(() => {
+        riddleFlashEl.style.transition = 'opacity 0.60s ease';
+        riddleFlashEl.style.opacity    = '0';
+    }, 100);
+}
+
+function triggerShake() {
+    if (reducedMotion) return;
+    riddleFrame.classList.remove('shake');
+    void riddleFrame.offsetWidth;
+    riddleFrame.classList.add('shake');
+    riddleFrame.addEventListener('animationend',
+        () => riddleFrame.classList.remove('shake'), { once: true });
+}
+
+/* ── Show riddle ── */
+function showRiddle(index) {
+    answerLocked = false;
+    clearTimeout(hintTimer1);
+    clearTimeout(hintTimer2);
+
+    const r = RIDDLES[index];
+    riddleQLabel.textContent = r.label;
+
+    /* Snap invisible */
+    riddleText.style.transition = 'none';
+    riddleText.style.opacity    = '0';
+    riddleHint.style.transition = 'none';
+    riddleHint.style.opacity    = '0';
+    riddleHint.innerHTML        = '';
+    riddleError.style.opacity   = '0';
+    riddleInput.value           = '';
+    riddleInput.disabled        = false;
+    riddleSubmit.disabled       = false;
+
+    setTimeout(() => {
+        /* Restore transitions, load content */
+        riddleText.style.transition = '';
+        riddleHint.style.transition = '';
+        riddleText.innerHTML = r.text;
+
+        /* Fade in on next paint */
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            riddleText.style.opacity = '1';
+        }));
+
+        setTimeout(() => riddleInput.focus(), 50);
+
+        /* Hint schedule */
+        hintTimer1 = setTimeout(() => {
+            riddleHint.innerHTML     = r.hints[0];
+            riddleHint.style.opacity = '1';
+        }, 20000);
+
+        hintTimer2 = setTimeout(() => {
+            riddleHint.innerHTML = r.hints[0] + '<br>' + r.hints[1];
+        }, 45000);
+
+    }, index === 0 ? 150 : 550);
+}
+
+/* ── Check answer ── */
+async function checkAnswer() {
+    if (answerLocked) return;
+
+    /* Normalise: trim → uppercase → hyphens to space → strip apostrophes → collapse spaces */
+    const normalised = riddleInput.value
+        .trim()
+        .toUpperCase()
+        .replace(/-/g, ' ')
+        .replace(/'/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    if (!normalised) return;
+
+    /* Hash the normalised input and compare against stored digests */
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalised));
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+    if (RIDDLES[currentQ].hashes.includes(hex)) {
+        /* ── Correct ── */
+        answerLocked = true;
+        clearTimeout(hintTimer1);
+        clearTimeout(hintTimer2);
+        riddleInput.disabled  = true;
+        riddleSubmit.disabled = true;
+        riddleError.style.opacity = '0';
+
+        triggerFlash('0.85');
+
+        setTimeout(() => {
+            illuminateSeal(currentQ);
+            currentQ++;
+
+            if (currentQ >= RIDDLES.length) {
+                riddleText.style.opacity = '0';
+                riddleHint.style.opacity = '0';
+                setTimeout(showCompletion, 900);
             } else {
-                doorInput.classList.remove('shake');
-                void doorInput.offsetWidth;
-                doorInput.classList.add('shake');
-                doorError.style.opacity = '1';
-                doorInput.value = '';
-                setTimeout(() => {
-                    doorError.style.opacity = '0';
-                    doorInput.classList.remove('shake');
-                }, 1400);
+                riddleText.style.opacity = '0';
+                riddleHint.style.opacity = '0';
+                setTimeout(() => showRiddle(currentQ), 700);
             }
-        }
+        }, 350);
 
-        doorProceed.addEventListener('click', tryEnter);
-        doorInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
-    </script>
+    } else {
+        /* ── Wrong ── */
+        triggerFlash('0.30');
+        triggerShake();
+
+        const msg = WRONG_MSGS[wrongMsgIdx % WRONG_MSGS.length];
+        wrongMsgIdx++;
+        riddleError.textContent   = msg;
+        riddleError.style.opacity = '1';
+        riddleInput.value         = '';
+
+        setTimeout(() => {
+            riddleError.style.opacity = '0';
+        }, 2400);
+    }
+}
+
+/* ── Completion screen ── */
+function showCompletion() {
+    /* Hide answer block and spare dividers */
+    riddleAnswerWrap.style.display = 'none';
+    riddleFrame.querySelectorAll('.riddle-divider')
+               .forEach(d => d.style.display = 'none');
+
+    riddleQLabel.textContent = 'Judgment Passed';
+
+    /* Build completion text */
+    const compText = document.createElement('div');
+    compText.className = 'completion-text';
+    compText.style.opacity = '0';
+    compText.innerHTML =
+        'You have survived the judgment of the sky.<br><br>' +
+        'The path beyond Olympus is now open.';
+    riddleFrame.insertBefore(compText, riddleAnswerWrap);
+
+    /* Build Step Beyond button */
+    const btn = document.createElement('button');
+    btn.className   = 'door-proceed';
+    btn.textContent = 'STEP BEYOND';
+    btn.style.letterSpacing = '0.42em';
+    btn.style.opacity = '0';
+    btn.style.transition = 'opacity 2s ease, color 0.4s, border-color 0.4s, box-shadow 0.4s';
+    btn.addEventListener('click', stepBeyond);
+    riddleFrame.insertBefore(btn, riddleAnswerWrap);
+
+    /* Fade in with a stagger */
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        compText.style.transition = 'opacity 2s ease';
+        compText.style.opacity    = '1';
+    }));
+    setTimeout(() => { btn.style.opacity = '1'; }, 1200);
+}
+
+/* ── Step Beyond ── */
+function stepBeyond() {
+    sessionStorage.setItem('mt_key',        ZEUS_HASH);
+    sessionStorage.setItem('zeus_complete', '1');
+    const exit = document.getElementById('exit-overlay');
+    exit.style.opacity      = '1';
+    exit.style.pointerEvents = 'all';
+    setTimeout(() => { window.location.href = 'wander.html'; }, 750);
+}
+
+/* ── Start riddle sequence (called on password success) ── */
+function startRiddles() {
+    buildSeals();
+    riddlePanel.classList.add('active');
+    setTimeout(() => showRiddle(0), 350);
+}
+
+/* ── Riddle input events ── */
+riddleSubmit.addEventListener('click', checkAnswer);
+riddleInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkAnswer();
+});
+</script>
 </body>
 </html>
