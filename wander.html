@@ -267,11 +267,78 @@
 
         /* Background audio plays via HTML5 Audio on user gesture or autoplay */
 
+        /* ── WILDCARD INTRO SCREEN ── */
+        #wildcardScreen {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 1.8s ease;
+        }
+
+        #cardContainer {
+            perspective: 1200px;
+            cursor: pointer;
+        }
+
+        #cardInner {
+            position: relative;
+            display: inline-block;
+            transform-style: preserve-3d;
+            transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #cardInner.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .card-back {
+            position: absolute;
+            inset: 0;
+            background: #050810;
+            transform: rotateY(180deg);
+            border-radius: 8px;
+        }
+
+        #wildcardImg {
+            max-width: clamp(130px, 22vw, 300px);
+            max-height: 62vh;
+            object-fit: contain;
+            display: block;
+            opacity: 0;
+            animation: wildcardFadeIn 1.8s ease-out 1s forwards;
+        }
+
+        @keyframes wildcardFadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
         /* ── TOUCH ── */
         #scene { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
 <body>
+
+<!-- Wildcard intro screen -->
+<div id="wildcardScreen">
+    <div id="cardContainer">
+        <div id="cardInner">
+            <div class="card-front">
+                <img id="wildcardImg" src="Resources/WildCard.png" alt="">
+            </div>
+            <div class="card-back"></div>
+        </div>
+    </div>
+</div>
 
 <div class="scene" id="scene">
 
@@ -464,11 +531,69 @@
 })();
 
 /* ══════════════════════════════════════
-   BACKGROUND AUDIO (local MP3)
+   WILDCARD GLOW + HOVER (JS-driven)
+   CSS animations own their properties and
+   always beat hover rules — so we pulse
+   the filter via rAF and handle hover
+   with inline styles instead.
 ══════════════════════════════════════ */
 (function () {
-    const audio = new Audio('Resources/WakeUp.mp3');
-    audio.loop = true;
+    const img       = document.getElementById('wildcardImg');
+    const container = document.getElementById('cardContainer');
+    let hovered      = false;
+    let rafId;
+    let phase        = 0;
+    let fadeProgress = 0; // 0→1 over first ~1.5s of glow, so it eases in
+
+    function glow() {
+        if (hovered) return;
+        fadeProgress = Math.min(1, fadeProgress + 1 / 90); // ~1.5s at 60fps
+        phase += 0.033;
+
+        const t  = (Math.sin(phase) + 1) / 2;
+        const targetB = 0.38 + t * 0.09;
+        const b  = (1.0 + (targetB - 1.0) * fadeProgress).toFixed(2); // ease from brightness 1 → dim
+        const a1 = ((0.10 + t * 0.20) * fadeProgress).toFixed(2);
+        const a2 = ((0.04 + t * 0.12) * fadeProgress).toFixed(2);
+        const r1 = (8  + t * 12).toFixed(1);
+        const r2 = (22 + t * 28).toFixed(1);
+        img.style.filter = `brightness(${b}) drop-shadow(0 0 ${r1}px rgba(255,220,140,${a1})) drop-shadow(0 0 ${r2}px rgba(255,200,80,${a2}))`;
+        rafId = requestAnimationFrame(glow);
+    }
+
+    // Start pulsing after fade-in completes (1s delay + 1.8s anim = 2.8s)
+    setTimeout(() => { fadeProgress = 0; rafId = requestAnimationFrame(glow); }, 2800);
+
+    container.addEventListener('mouseenter', () => {
+        hovered = true;
+        cancelAnimationFrame(rafId);
+        img.style.transition = 'filter 0.4s ease, transform 0.35s ease';
+        img.style.filter     = 'brightness(0.90) drop-shadow(0 0 55px rgba(255,235,160,0.92)) drop-shadow(0 0 120px rgba(255,210,100,0.55))';
+        img.style.transform  = 'translateY(-5px) scale(1.11)';
+    });
+
+    container.addEventListener('mouseleave', () => {
+        hovered = false;
+        img.style.transition = 'filter 0.4s ease, transform 0.35s ease';
+        img.style.transform  = '';
+        img.style.filter     = 'brightness(0.38) drop-shadow(0 0 8px rgba(255,220,140,0.10)) drop-shadow(0 0 22px rgba(255,200,80,0.05))';
+        setTimeout(() => {
+            if (!hovered) {
+                img.style.transition = '';
+                fadeProgress = 1; // already visible, no need to ramp again
+                rafId = requestAnimationFrame(glow);
+            }
+        }, 420);
+    });
+})();
+
+/* ══════════════════════════════════════
+   WILDCARD CLICK → REVEAL + AUDIO
+══════════════════════════════════════ */
+(function () {
+    const audio  = new Audio('Resources/WakeUp.mp3');
+    audio.loop   = true;
+    const screen = document.getElementById('wildcardScreen');
 
     function scheduleQuote() {
         setTimeout(function () {
@@ -476,18 +601,22 @@
         }, 14000);
     }
 
-    setTimeout(function () {
-        audio.play().then(scheduleQuote).catch(function () {
-            // Autoplay blocked — wait for first user gesture
-            function onGesture() {
-                audio.play().then(scheduleQuote);
-                document.removeEventListener('click', onGesture);
-                document.removeEventListener('touchstart', onGesture);
-            }
-            document.addEventListener('click', onGesture);
-            document.addEventListener('touchstart', onGesture);
-        });
-    }, 2000);
+    document.getElementById('cardContainer').addEventListener('click', function () {
+        // Flip the card
+        document.getElementById('cardInner').classList.add('flipped');
+
+        // After flip completes, fade out the screen
+        setTimeout(function () {
+            screen.style.opacity = '0';
+            screen.style.pointerEvents = 'none';
+            setTimeout(function () { screen.style.display = 'none'; }, 1800);
+        }, 900);
+
+        // Start audio 2 seconds after click
+        setTimeout(function () {
+            audio.play().then(scheduleQuote).catch(function () {});
+        }, 2000);
+    }, { once: true });
 })();
 </script>
 </body>
