@@ -205,6 +205,8 @@
             opacity: 0;
             pointer-events: none;
             width: 100%;
+            /* Extra breath between the Walter Mitty quotation and the reward section */
+            margin-top: clamp(1rem, 2.5vh, 2.5rem);
         }
 
         #symbolsRow.visible {
@@ -307,6 +309,44 @@
         .c-hades    { color: #c09ae0; }
         .c-moonlit  { color: rgba(255,252,240,0.95); }
 
+        /* ── RETURN GATE ── */
+        #returnGate {
+            position: fixed;
+            bottom: max(clamp(1.2rem, 3vh, 2rem), calc(env(safe-area-inset-bottom, 0px) + 1rem));
+            right: clamp(1rem, 3vw, 2rem);
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 15;
+            text-decoration: none;
+            color: rgba(255,252,235,0.28);
+            border-radius: 50%;
+            -webkit-tap-highlight-color: transparent;
+            transition: color 0.5s ease, filter 0.5s ease;
+        }
+
+        #returnGate.visible {
+            pointer-events: auto;
+            animation: fadeSlideUp 2.5s ease-out forwards;
+        }
+
+        #returnGate:hover,
+        #returnGate:focus-visible {
+            color: rgba(255,252,235,0.72);
+            filter: drop-shadow(0 0 9px rgba(225,220,190,0.40));
+            outline: none;
+        }
+
+        #returnGate svg {
+            width: 36px;
+            height: 36px;
+            display: block;
+        }
+
         /* ── CLICK PROMPT ── */
         .click-prompt {
             position: fixed;
@@ -328,7 +368,7 @@
         /* ── RESPONSIVE ── */
         @media (max-width: 600px) {
             .sym-svg         { height: clamp(36px, 10vw, 60px); }
-            #symbolsRow      { gap: clamp(1.5rem, 8vw, 3.5rem); }
+            #symbolsRow      { gap: clamp(1.5rem, 8vw, 3.5rem); margin-top: clamp(0.8rem, 2vh, 1.8rem); }
             .main-quote      { font-size: clamp(1rem, 5vw, 1.3rem); line-height: 2; }
             .victory-heading { font-size: clamp(0.58rem, 3vw, 0.75rem); letter-spacing: 0.28em; }
             .victory-poem    { font-size: clamp(0.78rem, 4vw, 1rem); }
@@ -347,6 +387,7 @@
 
         @media (max-height: 580px) {
             .victory-inner   { gap: clamp(0.3rem, 1vh, 0.8rem); padding: 3vh 4vw; }
+            #symbolsRow      { margin-top: clamp(0.4rem, 1vh, 0.8rem); }
             .sym-svg         { height: clamp(32px, 6vw, 50px); }
             .victory-heading { font-size: clamp(0.58rem, 1.4vw, 0.82rem); }
             .victory-poem    { font-size: clamp(0.75rem, 1.6vw, 1rem); line-height: 1.7; }
@@ -356,7 +397,8 @@
         @media (prefers-reduced-motion: reduce) {
             #symbolsRow.visible,
             #quoteText.visible,
-            #victoryBlock.visible {
+            #victoryBlock.visible,
+            #returnGate.visible {
                 animation: none;
                 opacity: 1;
             }
@@ -570,19 +612,33 @@
 <div id="victoryWrap">
     <div class="victory-inner">
 
-        <!-- God symbols in completion order (populated by JS) -->
-        <div id="symbolsRow"></div>
-
-        <!-- Walter Mitty quote -->
+        <!-- Walter Mitty quote (appears first) -->
         <div id="quoteText">
             <div class="main-quote">To see the world, things dangerous to come to,<br>to see behind walls, draw closer,<br>to find each other, and to feel.<br>That is the purpose of life.</div>
         </div>
+
+        <!-- God symbols in completion order: appear after quote (populated by JS) -->
+        <div id="symbolsRow"></div>
 
         <!-- Victory heading, poetic lines, points (populated by JS) -->
         <div id="victoryBlock"></div>
 
     </div>
 </div>
+
+<!-- Return-to-beginning temple gate -->
+<a id="returnGate" href="index.html" aria-label="Return to the beginning">
+    <svg viewBox="0 0 56 56" fill="none" stroke="currentColor"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="28" cy="28" r="24.5" stroke-width="0.7" stroke-opacity="0.5"/>
+        <polyline points="13,24 28,12 43,24" stroke-width="1.4"/>
+        <line x1="12" y1="24" x2="44" y2="24" stroke-width="1.4"/>
+        <line x1="17" y1="24" x2="17" y2="44" stroke-width="1.4"/>
+        <line x1="39" y1="24" x2="39" y2="44" stroke-width="1.4"/>
+        <line x1="12" y1="44" x2="44" y2="44" stroke-width="1.4"/>
+        <line x1="10" y1="46.5" x2="46" y2="46.5" stroke-width="0.9"/>
+    </svg>
+</a>
 
 <script>
 /* ── ACCESS GATE ── */
@@ -667,8 +723,41 @@
    VICTORY REVEAL SYSTEM
    Reads tcb_completed_paths from localStorage,
    builds god symbols + heading + poetic text + points.
+   Also controls the return-gate symbol.
 ══════════════════════════════════════ */
 (function () {
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ── Return gate: click / keyboard handler (always active) ── */
+    var gate = document.getElementById('returnGate');
+    if (gate) {
+        function navigateHome() {
+            var aud = window._bgAudio;
+            if (aud && !aud.paused && aud.volume > 0) {
+                /* Fade audio to 0 over ~400 ms, then navigate */
+                var steps = 16, dt = 25, vol = aud.volume, step = vol / steps;
+                var id = setInterval(function () {
+                    vol = Math.max(0, vol - step);
+                    try { aud.volume = vol; } catch (ex) {}
+                    if (vol <= 0) { clearInterval(id); window.location.href = 'index.html'; }
+                }, dt);
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        gate.addEventListener('click', function (e) { e.preventDefault(); navigateHome(); });
+        gate.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigateHome(); }
+        });
+    }
+
+    /* ── Gate reveal hook (called by scheduleQuote after all other content settles) ── */
+    window._revealGate = function () {
+        if (!gate) return;
+        if (prefersReduced) { gate.style.opacity = '1'; gate.style.pointerEvents = 'auto'; }
+        else                { gate.classList.add('visible'); }
+    };
+
     /* ── Read completed paths (order preserved) ── */
     var completedPaths = [];
     try {
@@ -690,8 +779,6 @@
         victoryBlock.style.display = 'none';
         return;
     }
-
-    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* ── SVG namespace helper ── */
     function ns(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
@@ -926,23 +1013,29 @@
 (function () {
     const audio  = new Audio('Resources/WakeUp.mp3');
     audio.loop   = true;
+    window._bgAudio = audio; /* exposed so the return gate can fade audio before navigating */
     const screen = document.getElementById('wildcardScreen');
 
     function scheduleQuote() {
-        /* Symbols appear 2s before the quote */
-        setTimeout(function () {
-            if (window._revealSymbols) window._revealSymbols();
-        }, 12000);
-
-        /* Quote at 14s — unchanged */
+        /* 1. Quote at 14s (unchanged timing) */
         setTimeout(function () {
             document.getElementById('quoteText').classList.add('visible');
         }, 14000);
 
-        /* Victory block: after quote fade-in (3.5s) + 1.5s buffer = 19s */
+        /* 2. Symbols after quote has fully appeared: 14s + 3.5s anim + 1.5s pause = 19s */
+        setTimeout(function () {
+            if (window._revealSymbols) window._revealSymbols();
+        }, 19000);
+
+        /* 3. Victory block after symbols: 19s + 2s anim + 1s buffer = 22s */
         setTimeout(function () {
             if (window._revealVictory) window._revealVictory();
-        }, 19000);
+        }, 22000);
+
+        /* 4. Return gate after all victory content settles: 22s + 2.5s anim + 0.5s = 25s */
+        setTimeout(function () {
+            if (window._revealGate) window._revealGate();
+        }, 25000);
     }
 
     document.getElementById('cardContainer').addEventListener('click', function () {
