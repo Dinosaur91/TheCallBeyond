@@ -140,6 +140,7 @@
         .door-wrap {
             position: absolute; inset: 0;
             display: flex; align-items: center; justify-content: center;
+            overflow-y: auto; padding: 16px 0;
         }
         .door-frame {
             display: flex; flex-direction: column; align-items: center;
@@ -340,16 +341,51 @@
             transition: opacity 2s ease;
         }
 
+        /* ── DOOR WARNING ── */
+        .door-warning {
+            width: 100%;
+            display: flex; flex-direction: column; align-items: center; gap: 9px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(90,68,16,0.25);
+        }
+        .door-warning-heading {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.52rem,1.1vw,0.62rem);
+            letter-spacing: 0.22em; text-transform: uppercase;
+            color: rgba(180,144,50,0.70); text-align: center; line-height: 1.9;
+        }
+        .door-warning-text {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.50rem,1.0vw,0.58rem);
+            letter-spacing: 0.10em;
+            color: rgba(148,115,38,0.50); text-align: center; line-height: 2.0;
+        }
+
+        /* ── CORRUPTED SEAL ── */
+        .seal-bolt.corrupted {
+            fill: rgba(110,10,10,0.50) !important;
+            filter: drop-shadow(0 0 6px rgba(180,20,20,0.55)) !important;
+        }
+
         /* ── MOBILE ── */
         @media (max-width: 600px) {
             .door-frame   { width: clamp(170px,72vw,230px); }
             .door-arch    { height: 88px; }
             .door-body    { padding: 16px 20px 20px; gap: 12px; }
             .door-proceed { font-size: 0.70rem; letter-spacing: 0.28em; padding: 0.65em 1.8em; }
+            .door-warning-heading { letter-spacing: 0.14em; }
+            .door-warning-text    { letter-spacing: 0.06em; }
             .riddle-frame { padding: 22px 22px 28px; gap: 18px; width: clamp(260px,90vw,440px); }
             .riddle-text  { font-size: 0.67rem; line-height: 2.0; }
             .intro-text   { font-size: 0.67rem; }
             .seal-row     { gap: 20px; }
+        }
+
+        @media (max-height: 580px) {
+            .door-wrap    { align-items: flex-start; padding-top: 20px; }
+            .door-arch    { height: 80px; }
+            .door-body    { padding: 14px 20px 18px; gap: 10px; }
+            .door-warning { gap: 6px; padding-bottom: 8px; }
         }
 
         /* ── REDUCED MOTION ── */
@@ -402,6 +438,10 @@
                     </svg>
                 </div>
                 <div class="door-body">
+                    <div class="door-warning">
+                        <div class="door-warning-heading">Only the children of Zeus may cross this threshold.</div>
+                        <div class="door-warning-text">"Those who enter beneath a stolen name will answer to the sky—and the sky remembers every trespass."</div>
+                    </div>
                     <input type="password" class="door-input" id="doorInput"
                         placeholder="· · · ·" maxlength="12" autocomplete="off">
                     <div class="door-error" id="doorError">denied</div>
@@ -452,6 +492,15 @@
     </div><!-- /.scene -->
 
 <script>
+/* ── BAN GUARD ── */
+(function(){
+    var exp=parseInt(localStorage.getItem('ban_expires')||'0',10);
+    if(Date.now()<exp){window.location.replace('index.html');}
+})();
+
+const HOUSE_HASHES={Zeus:'f3cc257bdc5b7fae678516bbaed6a0f889704765ab077ad135f0e20f4dffec91',Poseidon:'8c30a7e330acdc5725c67d15f4ab7705ad1b0e790d2a48f44963467a81c667ac',Hades:'9a09833269e92b45bece49a6e273a9aa1e763373a298bf136e111f4fb1b445e7'};
+const THIS_REALM='Zeus';
+
 /* ── BOLT ANIMATION ── */
 const bolt = document.getElementById('bolt-svg');
 function moveBolt() {
@@ -471,13 +520,21 @@ const doorProceed = document.getElementById('doorProceed');
 const doorWrap    = document.getElementById('doorWrap');
 const doorFrame   = document.getElementById('doorFrame');
 
-const ZEUS_HASH = '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4';
+const ZEUS_HASH = 'f3cc257bdc5b7fae678516bbaed6a0f889704765ab077ad135f0e20f4dffec91';
 
 async function tryEnter() {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(doorInput.value));
+    const normalised = doorInput.value.trim().toUpperCase().replace(/\s+/g, ' ');
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalised));
     const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-    if (hex === ZEUS_HASH) {
-        /* Password correct — do NOT set mt_key yet; riddles must be completed first */
+    const matchedHouse = Object.keys(HOUSE_HASHES).find(h => HOUSE_HASHES[h] === hex);
+    if (matchedHouse) {
+        if (matchedHouse !== THIS_REALM) {
+            sessionStorage.setItem('intruder_house', matchedHouse);
+            sessionStorage.setItem('intruder_realm', THIS_REALM);
+        } else {
+            sessionStorage.removeItem('intruder_house');
+            sessionStorage.removeItem('intruder_realm');
+        }
         doorFrame.style.opacity = '0';
         doorFrame.style.pointerEvents = 'none';
         setTimeout(() => {
@@ -769,7 +826,12 @@ async function checkAnswer() {
             if (currentQ >= RIDDLES.length) {
                 riddleText.style.opacity = '0';
                 riddleHint.style.opacity = '0';
-                setTimeout(showCompletion, 900);
+                const intruderHouse = sessionStorage.getItem('intruder_house');
+                if (intruderHouse) {
+                    setTimeout(() => startPunishmentSequence(intruderHouse, THIS_REALM), 1200);
+                } else {
+                    setTimeout(showCompletion, 900);
+                }
             } else {
                 riddleText.style.opacity = '0';
                 riddleHint.style.opacity = '0';
@@ -854,6 +916,92 @@ riddleSubmit.addEventListener('click', checkAnswer);
 riddleInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') checkAnswer();
 });
+
+/* ══════════════════════════════════════
+   PUNISHMENT SEQUENCE
+══════════════════════════════════════ */
+function psFury(id, targetOpacity) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.transition = 'opacity 2.2s ease';
+    el.style.opacity    = targetOpacity;
+    setTimeout(() => {
+        el.style.transition = 'opacity 4s ease';
+        el.style.opacity    = '0.05';
+    }, 3500);
+}
+
+function startPunishmentSequence(passwordHouse, enteredRealm) {
+    const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    document.querySelectorAll('.seal-bolt,.seal-trident,.seal-skull').forEach(el => {
+        el.classList.remove('lit');
+        el.classList.add('corrupted');
+    });
+
+    const furySvg =
+        '<svg viewBox="0 0 100 280" xmlns="http://www.w3.org/2000/svg">'
+        + '<path d="M32,38 Q18,20 28,8 Q34,2 36,18" fill="none" stroke="rgba(100,5,5,0.80)" stroke-width="2.5" stroke-linecap="round"/>'
+        + '<path d="M44,30 Q38,10 48,4 Q54,0 52,16" fill="none" stroke="rgba(100,5,5,0.80)" stroke-width="2.5" stroke-linecap="round"/>'
+        + '<path d="M58,36 Q65,16 72,12 Q76,8 68,24" fill="none" stroke="rgba(100,5,5,0.80)" stroke-width="2.5" stroke-linecap="round"/>'
+        + '<ellipse cx="50" cy="52" rx="16" ry="18" fill="rgba(45,5,5,0.80)"/>'
+        + '<path d="M34,82 Q4,62 2,108 Q8,90 30,98 Z" fill="rgba(30,0,5,0.75)"/>'
+        + '<path d="M66,82 Q96,62 98,108 Q92,90 70,98 Z" fill="rgba(30,0,5,0.75)"/>'
+        + '<path d="M34,82 Q40,72 50,70 Q60,72 66,82 L72,200 Q60,218 50,220 Q40,218 28,200 Z" fill="rgba(22,0,4,0.85)"/>'
+        + '<path d="M28,200 Q18,230 24,260" fill="none" stroke="rgba(45,5,5,0.60)" stroke-width="3" stroke-linecap="round"/>'
+        + '<path d="M40,216 Q34,242 42,265" fill="none" stroke="rgba(45,5,5,0.60)" stroke-width="3" stroke-linecap="round"/>'
+        + '<path d="M60,216 Q66,242 58,265" fill="none" stroke="rgba(45,5,5,0.60)" stroke-width="3" stroke-linecap="round"/>'
+        + '<path d="M72,200 Q82,230 76,260" fill="none" stroke="rgba(45,5,5,0.60)" stroke-width="3" stroke-linecap="round"/>'
+        + '<ellipse cx="43" cy="50" rx="4.5" ry="5.5" fill="rgba(220,40,10,0.65)"/>'
+        + '<ellipse cx="57" cy="50" rx="4.5" ry="5.5" fill="rgba(220,40,10,0.65)"/>'
+        + '</svg>';
+
+    const ov = document.createElement('div');
+    ov.id = 'punishment-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:600;pointer-events:all;overflow:hidden;';
+    ov.innerHTML =
+        '<div id="punish-bg" style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(30,0,0,0.96) 0%,rgba(0,0,0,0.99) 70%);opacity:0;transition:opacity 2.8s ease;"></div>'
+        + '<div id="fury-1" style="position:absolute;left:-2%;top:10%;width:12vw;max-width:160px;opacity:0;filter:blur(3px) drop-shadow(0 0 18px rgba(180,20,10,0.70));">' + furySvg + '</div>'
+        + '<div id="fury-2" style="position:absolute;right:-2%;top:10%;width:12vw;max-width:160px;opacity:0;filter:blur(3px) drop-shadow(0 0 18px rgba(180,20,10,0.70));transform:scaleX(-1);">' + furySvg + '</div>'
+        + '<div id="fury-3" style="position:absolute;top:-4%;left:50%;width:9vw;max-width:120px;opacity:0;filter:blur(4px) drop-shadow(0 0 22px rgba(180,20,10,0.65));transform:translateX(-50%) scaleX(0.70);">' + furySvg + '</div>'
+        + '<div id="punish-panel" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity 2s ease;pointer-events:none;"></div>';
+    document.body.appendChild(ov);
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        document.getElementById('punish-bg').style.opacity = '1';
+    }));
+
+    if (!rm) {
+        setTimeout(() => psFury('fury-1', '0.66'), 1600);
+        setTimeout(() => psFury('fury-2', '0.60'), 2700);
+        setTimeout(() => psFury('fury-3', '0.50'), 4000);
+    }
+
+    setTimeout(() => {
+        const panel = document.getElementById('punish-panel');
+        panel.innerHTML =
+            '<div style="font-family:\'Cinzel\',serif;font-size:clamp(0.60rem,1.4vw,0.82rem);letter-spacing:0.44em;text-transform:uppercase;color:rgba(200,50,30,0.92);text-align:center;line-height:2.6;max-width:520px;">'
+            + '<div style="font-size:clamp(0.80rem,1.9vw,1.10rem);letter-spacing:0.38em;color:rgba(230,70,40,0.98);margin-bottom:0.8em;">THE FURIES HAVE FOUND YOU</div>'
+            + 'You are no child of ' + enteredRealm + '.<br>'
+            + 'Child of ' + passwordHouse + '\u2014the gods remember your name.<br><br>'
+            + '<span id="castout-line" style="opacity:0;transition:opacity 2.2s ease;display:block;">YOU HAVE BEEN CAST OUT</span>'
+            + '</div>';
+        panel.style.opacity = '1';
+        setTimeout(() => {
+            const co = document.getElementById('castout-line');
+            if (co) co.style.opacity = '1';
+        }, 3000);
+    }, 3000);
+
+    setTimeout(() => {
+        localStorage.setItem('ban_expires', String(Date.now() + 5 * 60 * 1000));
+        ['zeus_entry','poseidon_entry','hades_entry',
+         'zeus_complete','poseidon_complete','hades_complete',
+         'mt_key','intruder_house','intruder_realm'].forEach(k => sessionStorage.removeItem(k));
+    }, 9000);
+
+    setTimeout(() => window.location.replace('index.html'), 20000);
+}
 </script>
 </body>
 </html>

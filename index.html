@@ -225,6 +225,32 @@
             from { transform: scale(1)    translateY(0);   }
             to   { transform: scale(1.18) translateY(-8%); }
         }
+        /* ── BAN OVERLAY ── */
+        #ban-overlay {
+            position: fixed; inset: 0; z-index: 500;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: radial-gradient(ellipse at 50% 44%, rgba(30,0,0,0.97) 0%, rgba(0,0,0,0.99) 70%);
+            pointer-events: all;
+        }
+        #ban-overlay h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.68rem,1.7vw,0.96rem);
+            letter-spacing: 0.40em; text-transform: uppercase;
+            color: rgba(200,50,30,0.92); text-align: center;
+            line-height: 2.4; margin-bottom: 1.4em;
+        }
+        #ban-countdown {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.8rem,5vw,3.0rem);
+            letter-spacing: 0.22em; color: rgba(170,30,15,0.85);
+        }
+        #ban-sub {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.46rem,0.9vw,0.56rem);
+            letter-spacing: 0.28em; text-transform: uppercase;
+            color: rgba(130,25,12,0.55); margin-top: 1.4em; text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -296,6 +322,44 @@
     <div id="trans-overlay"></div>
 
     <script>
+        /* ── BAN CHECK ── */
+        function showBanOverlay(expiresAt) {
+            document.querySelectorAll('.symbol-item').forEach(el => {
+                el.style.pointerEvents = 'none';
+                el.style.opacity = '0.12';
+            });
+            var ov = document.createElement('div');
+            ov.id = 'ban-overlay';
+            ov.innerHTML =
+                '<h1>THE GODS HAVE CLOSED THEIR GATES<br>'
+                + '<span style="font-size:0.72em;letter-spacing:0.26em;color:rgba(155,32,15,0.72);">'
+                + 'You have been cast out of the divine realm</span></h1>'
+                + '<div id="ban-countdown"></div>'
+                + '<div id="ban-sub">The gates reopen when judgment is served</div>';
+            document.body.appendChild(ov);
+            function tick() {
+                var rem = Math.max(0, expiresAt - Date.now());
+                if (rem <= 0) {
+                    ov.remove();
+                    localStorage.removeItem('ban_expires');
+                    document.querySelectorAll('.symbol-item').forEach(el => {
+                        el.style.pointerEvents = '';
+                        el.style.opacity = '';
+                    });
+                    return;
+                }
+                var mm = String(Math.floor(rem / 60000)).padStart(2,'0');
+                var ss = String(Math.floor((rem % 60000) / 1000)).padStart(2,'0');
+                document.getElementById('ban-countdown').textContent = mm + ':' + ss;
+                setTimeout(tick, 500);
+            }
+            tick();
+        }
+        (function(){
+            var exp = parseInt(localStorage.getItem('ban_expires')||'0', 10);
+            if (Date.now() < exp) { showBanOverlay(exp); }
+        })();
+
         const routes = {
             'sym-poseidon': { ovl: 'to-ocean', body: 'rush-ocean', href: 'poseidon.html' },
             'sym-zeus':     { ovl: 'to-sky',   body: 'rush-sky',   href: 'zeus.html'     },
