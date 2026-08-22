@@ -166,27 +166,93 @@
             pointer-events: none;
         }
 
-        /* ── TEXT ── */
-        .text-center {
-            position: absolute;
-            top: 26%;
-            left: 50%;
-            transform: translateX(-50%);
+        /* ═══════════════════════════════════════
+           VICTORY COMPOSITION SYSTEM
+        ═══════════════════════════════════════ */
+
+        /* Fixed overlay above the scene; scrollable on short screens */
+        #victoryWrap {
+            position: fixed;
+            inset: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            pointer-events: none;
+            z-index: 10;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Flex column — centers content when it fits, scrolls when it doesn't */
+        .victory-inner {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5vh 4vw;
+            gap: clamp(0.6rem, 1.8vh, 1.8rem);
+            text-align: center;
+            width: clamp(280px, 86%, 780px);
+            margin: 0 auto;
+        }
+
+        /* ── GOD SYMBOLS ROW ── */
+        #symbolsRow {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: center;
+            gap: clamp(2.2rem, 6vw, 5rem);
+            opacity: 0;
+            pointer-events: none;
+            width: 100%;
+        }
+
+        #symbolsRow.visible {
+            animation: fadeSlideUp 2s ease-out forwards;
+        }
+
+        .sym-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sym-svg {
+            height: clamp(50px, 8vw, 88px);
+            width: auto;
+            display: block;
+        }
+
+        /* ── QUOTE ── */
+        #quoteText {
             text-align: center;
             pointer-events: none;
-            width: clamp(280px, 86%, 780px);
+            width: 100%;
             opacity: 0;
         }
 
-        .text-center.visible {
-            animation: textFadeIn 3.5s ease-out forwards;
+        #quoteText.visible {
+            animation: fadeSlideUp 3.5s ease-out forwards;
         }
 
-        @keyframes textFadeIn {
-            from { opacity: 0; transform: translateX(-50%) translateY(16px); }
-            to   { opacity: 1; transform: translateX(-50%) translateY(0);    }
+        /* ── VICTORY BLOCK ── */
+        #victoryBlock {
+            text-align: center;
+            pointer-events: none;
+            width: 100%;
+            opacity: 0;
         }
 
+        #victoryBlock.visible {
+            animation: fadeSlideUp 2.5s ease-out forwards;
+        }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0);    }
+        }
+
+        /* ── QUOTE FONT ── */
         .main-quote {
             font-family: 'Cormorant Garamond', 'Georgia', serif;
             font-style: italic;
@@ -200,9 +266,50 @@
                 0 0 40px rgba(200,150,80,0.22);
         }
 
+        /* ── VICTORY TEXT ELEMENTS ── */
+        .victory-heading {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: clamp(0.65rem, 1.6vw, 1rem);
+            letter-spacing: 0.38em;
+            text-transform: uppercase;
+            color: rgba(255,252,235,0.88);
+            text-shadow: 0 2px 12px rgba(0,0,0,0.75);
+            margin-bottom: clamp(0.35rem, 1.2vh, 1rem);
+        }
+
+        .victory-poem {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            font-style: italic;
+            font-weight: 300;
+            font-size: clamp(0.82rem, 1.9vw, 1.2rem);
+            letter-spacing: 0.04em;
+            line-height: 2;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.70);
+        }
+
+        .victory-points {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.1rem, 3vw, 2rem);
+            letter-spacing: 0.28em;
+            text-shadow: 0 0 28px currentColor, 0 2px 10px rgba(0,0,0,0.70);
+            margin-top: clamp(0.2rem, 0.8vh, 0.6rem);
+        }
+
+        .points-label {
+            font-size: 0.52em;
+            letter-spacing: 0.22em;
+        }
+
+        /* ── GOD COLOURS ── */
+        .c-zeus     { color: #e8d472; }
+        .c-poseidon { color: #72b8d8; }
+        .c-hades    { color: #c09ae0; }
+        .c-moonlit  { color: rgba(255,252,240,0.95); }
+
         /* ── CLICK PROMPT ── */
         .click-prompt {
-            position: absolute;
+            position: fixed;
             bottom: 6%;
             left: 50%;
             transform: translateX(-50%);
@@ -215,18 +322,17 @@
             white-space: nowrap;
             animation: breathe 3.2s ease-in-out infinite;
             transition: opacity 1.6s ease;
+            z-index: 10;
         }
 
-        /* ── MOBILE ── */
+        /* ── RESPONSIVE ── */
         @media (max-width: 600px) {
-            .text-center {
-                top: 20%;
-                width: 90%;
-            }
-            .main-quote {
-                font-size: clamp(1rem, 5vw, 1.3rem);
-                line-height: 2;
-            }
+            .sym-svg         { height: clamp(36px, 10vw, 60px); }
+            #symbolsRow      { gap: clamp(1.5rem, 8vw, 3.5rem); }
+            .main-quote      { font-size: clamp(1rem, 5vw, 1.3rem); line-height: 2; }
+            .victory-heading { font-size: clamp(0.58rem, 3vw, 0.75rem); letter-spacing: 0.28em; }
+            .victory-poem    { font-size: clamp(0.78rem, 4vw, 1rem); }
+            .victory-points  { font-size: clamp(1rem, 6vw, 1.5rem); }
             .click-prompt {
                 font-size: 0.6rem;
                 letter-spacing: 0.22em;
@@ -236,10 +342,25 @@
                 left: 10%;
                 transform: none;
             }
-            .moon {
-                top: 6%;
-                right: 10%;
+            .moon { top: 6%; right: 10%; }
+        }
+
+        @media (max-height: 580px) {
+            .victory-inner   { gap: clamp(0.3rem, 1vh, 0.8rem); padding: 3vh 4vw; }
+            .sym-svg         { height: clamp(32px, 6vw, 50px); }
+            .victory-heading { font-size: clamp(0.58rem, 1.4vw, 0.82rem); }
+            .victory-poem    { font-size: clamp(0.75rem, 1.6vw, 1rem); line-height: 1.7; }
+            .victory-points  { font-size: clamp(0.9rem, 2.5vw, 1.5rem); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #symbolsRow.visible,
+            #quoteText.visible,
+            #victoryBlock.visible {
+                animation: none;
+                opacity: 1;
             }
+            .mist-float, .mist-float-2 { animation: none; }
         }
 
         .click-prompt.hide { opacity: 0; }
@@ -258,14 +379,12 @@
         }
 
         @keyframes fireflyRise {
-            0%   { opacity: 0; transform: translateY(0)     translateX(0);   }
+            0%   { opacity: 0;    transform: translateY(0)     translateX(0);    }
             6%   { opacity: 1; }
-            50%  { opacity: 0.7; transform: translateY(-42vh) translateX(18px); }
+            50%  { opacity: 0.7;  transform: translateY(-42vh) translateX(18px); }
             94%  { opacity: 0.15; }
-            100% { opacity: 0; transform: translateY(-82vh) translateX(-8px); }
+            100% { opacity: 0;    transform: translateY(-82vh) translateX(-8px); }
         }
-
-        /* Background audio plays via HTML5 Audio on user gesture or autoplay */
 
         /* ── WILDCARD INTRO SCREEN ── */
         #wildcardScreen {
@@ -445,13 +564,25 @@
     <!-- Cinematic vignette -->
     <div class="vignette"></div>
 
-    <!-- Text -->
-    <div class="text-center" id="quoteText">
-        <div class="main-quote">To see the world, things dangerous to come to,<br>to see behind walls, draw closer,<br>to find each other, and to feel.<br>That is the purpose of life.</div>
-    </div>
-
-
 </div><!-- /.scene -->
+
+<!-- Victory composition overlay (fixed, scrollable on short screens) -->
+<div id="victoryWrap">
+    <div class="victory-inner">
+
+        <!-- God symbols in completion order (populated by JS) -->
+        <div id="symbolsRow"></div>
+
+        <!-- Walter Mitty quote -->
+        <div id="quoteText">
+            <div class="main-quote">To see the world, things dangerous to come to,<br>to see behind walls, draw closer,<br>to find each other, and to feel.<br>That is the purpose of life.</div>
+        </div>
+
+        <!-- Victory heading, poetic lines, points (populated by JS) -->
+        <div id="victoryBlock"></div>
+
+    </div>
+</div>
 
 <script>
 /* ── ACCESS GATE ── */
@@ -533,11 +664,213 @@
 })();
 
 /* ══════════════════════════════════════
+   VICTORY REVEAL SYSTEM
+   Reads tcb_completed_paths from localStorage,
+   builds god symbols + heading + poetic text + points.
+══════════════════════════════════════ */
+(function () {
+    /* ── Read completed paths (order preserved) ── */
+    var completedPaths = [];
+    try {
+        var raw = localStorage.getItem('tcb_completed_paths');
+        var arr = raw ? JSON.parse(raw) : [];
+        if (Array.isArray(arr)) {
+            completedPaths = arr.filter(function (p) {
+                return p === 'zeus' || p === 'poseidon' || p === 'hades';
+            });
+        }
+    } catch (e) {}
+
+    var symbolsRow   = document.getElementById('symbolsRow');
+    var victoryBlock = document.getElementById('victoryBlock');
+
+    if (completedPaths.length === 0) {
+        /* No recorded paths — collapse placeholders so they don't add gap */
+        symbolsRow.style.display   = 'none';
+        victoryBlock.style.display = 'none';
+        return;
+    }
+
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ── SVG namespace helper ── */
+    function ns(tag) { return document.createElementNS('http://www.w3.org/2000/svg', tag); }
+
+    /* ── Zeus: Lightning Bolt ── */
+    function buildBolt() {
+        var svg  = ns('svg');
+        svg.setAttribute('viewBox', '0 0 54 100');
+        svg.setAttribute('fill', 'currentColor');
+        svg.className.baseVal = 'sym-svg c-zeus';
+        var poly = ns('polygon');
+        poly.setAttribute('points', '36,4 14,52 28,52 18,96 46,44 30,44 48,4');
+        svg.appendChild(poly);
+        return svg;
+    }
+
+    /* ── Poseidon: Trident ── */
+    function buildTrident() {
+        var svg = ns('svg');
+        svg.setAttribute('viewBox', '0 0 60 130');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2.2');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        svg.className.baseVal = 'sym-svg c-poseidon';
+
+        function L(x1, y1, x2, y2) {
+            var el = ns('line');
+            el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+            el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+            return el;
+        }
+        function PL(pts) {
+            var el = ns('polyline');
+            el.setAttribute('points', pts);
+            return el;
+        }
+        svg.appendChild(L(30, 62, 30, 122));
+        svg.appendChild(L(12, 76, 48, 76));
+        svg.appendChild(L(30, 62, 30, 10));
+        svg.appendChild(PL('24,24 30,10 36,24'));
+        svg.appendChild(L(12, 76, 12, 28));
+        svg.appendChild(PL('7,41 12,28 17,41'));
+        svg.appendChild(L(48, 76, 48, 28));
+        svg.appendChild(PL('43,41 48,28 53,41'));
+        return svg;
+    }
+
+    /* ── Hades: Skull ── */
+    function buildSkull() {
+        var svg = ns('svg');
+        svg.setAttribute('viewBox', '0 0 80 92');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2.2');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        svg.className.baseVal = 'sym-svg c-hades';
+
+        var cranium = ns('path');
+        cranium.setAttribute('d',
+            'M40,10 C20,10 12,26 12,44 C12,59 19,67 27,72' +
+            ' L27,82 L53,82 L53,72 C61,67 68,59 68,44' +
+            ' C68,26 60,10 40,10 Z');
+        svg.appendChild(cranium);
+
+        function E(cx, cy, rx, ry) {
+            var el = ns('ellipse');
+            el.setAttribute('cx', cx); el.setAttribute('cy', cy);
+            el.setAttribute('rx', rx); el.setAttribute('ry', ry);
+            return el;
+        }
+        svg.appendChild(E(28, 44, 9, 10));
+        svg.appendChild(E(52, 44, 9, 10));
+
+        var nose = ns('path');
+        nose.setAttribute('d', 'M36,61 L40,55 L44,61 Z');
+        svg.appendChild(nose);
+
+        function L(x1, y1, x2, y2) {
+            var el = ns('line');
+            el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+            el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+            return el;
+        }
+        svg.appendChild(L(36, 72, 36, 82));
+        svg.appendChild(L(44, 72, 44, 82));
+        return svg;
+    }
+
+    var SVG_BUILDERS = { zeus: buildBolt, poseidon: buildTrident, hades: buildSkull };
+
+    /* ── Populate symbols row in completion order ── */
+    completedPaths.forEach(function (god) {
+        if (!SVG_BUILDERS[god]) return;
+        var item = document.createElement('div');
+        item.className = 'sym-icon';
+        item.appendChild(SVG_BUILDERS[god]());
+        symbolsRow.appendChild(item);
+    });
+
+    /* ── Text tables ── */
+    var ONE_PATH_LINE = {
+        zeus:     'The sky itself bears witness.',
+        poseidon: 'The final tide has carried you beyond all others.',
+        hades:    'You crossed the final gate and returned with what was hidden.'
+    };
+    var TWO_PATH_LINE = {
+        zeus:     'The sky itself bears witness.',
+        poseidon: 'The final tide carries your name beyond the shore.',
+        hades:    'The gates below remember your return.'
+    };
+    var COLOR_CLASS = { zeus: 'c-zeus', poseidon: 'c-poseidon', hades: 'c-hades' };
+    var POINTS_BY_COUNT = [0, 35, 70, 199];
+
+    var n   = completedPaths.length;
+    var pts = POINTS_BY_COUNT[n] || 0;
+
+    /* Heading — universal */
+    var heading = document.createElement('div');
+    heading.className   = 'victory-heading';
+    heading.textContent = 'You have answered the call';
+    victoryBlock.appendChild(heading);
+
+    /* Poetic lines — varies by path count */
+    if (n === 3) {
+        var poem = document.createElement('div');
+        poem.className = 'victory-poem c-moonlit';
+        poem.innerHTML =
+            'The dead spoke your name. The sky bore witness.<br>' +
+            'The sea carried you beyond the final shore.<br>' +
+            'Three paths. Three realms. One final discovery.<br>' +
+            '<em>Congratulations\u2014the final discovery belongs to you.</em>';
+        victoryBlock.appendChild(poem);
+    } else if (n === 2) {
+        completedPaths.forEach(function (god) {
+            var line = document.createElement('div');
+            line.className   = 'victory-poem ' + (COLOR_CLASS[god] || '');
+            line.textContent = TWO_PATH_LINE[god] || '';
+            victoryBlock.appendChild(line);
+        });
+        var closing = document.createElement('div');
+        closing.className = 'victory-poem c-moonlit';
+        closing.innerHTML =
+            'Two realms now bear witness to your journey.<br>' +
+            '<em>Congratulations\u2014the final discovery belongs to you.</em>';
+        victoryBlock.appendChild(closing);
+    } else {
+        /* n === 1 */
+        var god0 = completedPaths[0];
+        var oneLine = document.createElement('div');
+        oneLine.className = 'victory-poem ' + (COLOR_CLASS[god0] || '');
+        oneLine.innerHTML =
+            (ONE_PATH_LINE[god0] || '') +
+            '<br><em>Congratulations\u2014the final discovery belongs to you.</em>';
+        victoryBlock.appendChild(oneLine);
+    }
+
+    /* Points */
+    var ptsEl  = document.createElement('div');
+    var ptsCls = (n === 1) ? (COLOR_CLASS[completedPaths[0]] || 'c-moonlit') : 'c-moonlit';
+    ptsEl.className = 'victory-points ' + ptsCls;
+    ptsEl.innerHTML = pts + ' <span class="points-label">POINTS</span>';
+    victoryBlock.appendChild(ptsEl);
+
+    /* ── Expose reveal hooks for scheduleQuote ── */
+    window._revealSymbols = function () {
+        if (prefersReduced) { symbolsRow.style.opacity = '1'; }
+        else                { symbolsRow.classList.add('visible'); }
+    };
+    window._revealVictory = function () {
+        if (prefersReduced) { victoryBlock.style.opacity = '1'; }
+        else                { victoryBlock.classList.add('visible'); }
+    };
+})();
+
+/* ══════════════════════════════════════
    WILDCARD GLOW + HOVER (JS-driven)
-   CSS animations own their properties and
-   always beat hover rules — so we pulse
-   the filter via rAF and handle hover
-   with inline styles instead.
 ══════════════════════════════════════ */
 (function () {
     const img       = document.getElementById('wildcardImg');
@@ -545,16 +878,15 @@
     let hovered      = false;
     let rafId;
     let phase        = 0;
-    let fadeProgress = 0; // 0→1 over first ~1.5s of glow, so it eases in
+    let fadeProgress = 0;
 
     function glow() {
         if (hovered) return;
-        fadeProgress = Math.min(1, fadeProgress + 1 / 90); // ~1.5s at 60fps
+        fadeProgress = Math.min(1, fadeProgress + 1 / 90);
         phase += 0.033;
-
-        const t  = (Math.sin(phase) + 1) / 2;
+        const t      = (Math.sin(phase) + 1) / 2;
         const targetB = 0.38 + t * 0.09;
-        const b  = (1.0 + (targetB - 1.0) * fadeProgress).toFixed(2); // ease from brightness 1 → dim
+        const b  = (1.0 + (targetB - 1.0) * fadeProgress).toFixed(2);
         const a1 = ((0.10 + t * 0.20) * fadeProgress).toFixed(2);
         const a2 = ((0.04 + t * 0.12) * fadeProgress).toFixed(2);
         const r1 = (8  + t * 12).toFixed(1);
@@ -563,7 +895,6 @@
         rafId = requestAnimationFrame(glow);
     }
 
-    // Start pulsing after fade-in completes (1s delay + 1.8s anim = 2.8s)
     setTimeout(() => { fadeProgress = 0; rafId = requestAnimationFrame(glow); }, 2800);
 
     container.addEventListener('mouseenter', () => {
@@ -582,7 +913,7 @@
         setTimeout(() => {
             if (!hovered) {
                 img.style.transition = '';
-                fadeProgress = 1; // already visible, no need to ramp again
+                fadeProgress = 1;
                 rafId = requestAnimationFrame(glow);
             }
         }, 420);
@@ -598,23 +929,31 @@
     const screen = document.getElementById('wildcardScreen');
 
     function scheduleQuote() {
+        /* Symbols appear 2s before the quote */
+        setTimeout(function () {
+            if (window._revealSymbols) window._revealSymbols();
+        }, 12000);
+
+        /* Quote at 14s — unchanged */
         setTimeout(function () {
             document.getElementById('quoteText').classList.add('visible');
         }, 14000);
+
+        /* Victory block: after quote fade-in (3.5s) + 1.5s buffer = 19s */
+        setTimeout(function () {
+            if (window._revealVictory) window._revealVictory();
+        }, 19000);
     }
 
     document.getElementById('cardContainer').addEventListener('click', function () {
-        // Flip the card
         document.getElementById('cardInner').classList.add('flipped');
 
-        // After flip completes, fade out the screen
         setTimeout(function () {
             screen.style.opacity = '0';
             screen.style.pointerEvents = 'none';
             setTimeout(function () { screen.style.display = 'none'; }, 1800);
         }, 900);
 
-        // Start audio 2 seconds after click
         setTimeout(function () {
             audio.play().then(scheduleQuote).catch(function () {});
         }, 2000);

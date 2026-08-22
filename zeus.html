@@ -896,6 +896,7 @@ function showCompletion() {
 
 /* ── Step Beyond ── */
 function stepBeyond() {
+    recordLegitimateCompletion('zeus');
     sessionStorage.setItem('mt_key',        ZEUS_HASH);
     sessionStorage.setItem('zeus_complete', '1');
     const exit = document.getElementById('exit-overlay');
@@ -916,6 +917,19 @@ riddleSubmit.addEventListener('click', checkAnswer);
 riddleInput.addEventListener('keydown', e => {
     if (e.key === 'Enter') checkAnswer();
 });
+
+/* ── LEGITIMATE PATH TRACKING ── */
+function recordLegitimateCompletion(path) {
+    try {
+        var raw = localStorage.getItem('tcb_completed_paths');
+        var arr = raw ? JSON.parse(raw) : [];
+        if (!Array.isArray(arr)) arr = [];
+        if (arr.indexOf(path) === -1) {
+            arr.push(path);
+            localStorage.setItem('tcb_completed_paths', JSON.stringify(arr));
+        }
+    } catch(e) {}
+}
 
 /* ══════════════════════════════════════
    PUNISHMENT SEQUENCE
@@ -985,16 +999,22 @@ function startPunishmentSequence(passwordHouse, enteredRealm) {
             + 'You are no child of ' + enteredRealm + '.<br>'
             + 'Child of ' + passwordHouse + '\u2014the gods remember your name.<br><br>'
             + '<span id="castout-line" style="opacity:0;transition:opacity 2.2s ease;display:block;">YOU HAVE BEEN CAST OUT</span>'
+            + '<span id="taken-line" style="opacity:0;transition:opacity 2.2s ease;display:block;margin-top:1.0em;font-size:0.70em;letter-spacing:0.16em;line-height:2.1;text-transform:none;">What you earned before this trespass has been taken from you.<br>The gods leave no reward in the hands of a thief.</span>'
             + '</div>';
         panel.style.opacity = '1';
         setTimeout(() => {
             const co = document.getElementById('castout-line');
             if (co) co.style.opacity = '1';
+            setTimeout(() => {
+                const tl = document.getElementById('taken-line');
+                if (tl) tl.style.opacity = '1';
+            }, 2000);
         }, 3000);
     }, 3000);
 
     setTimeout(() => {
         localStorage.setItem('ban_expires', String(Date.now() + 5 * 60 * 1000));
+        localStorage.removeItem('tcb_completed_paths');
         ['zeus_entry','poseidon_entry','hades_entry',
          'zeus_complete','poseidon_complete','hades_complete',
          'mt_key','intruder_house','intruder_realm'].forEach(k => sessionStorage.removeItem(k));
