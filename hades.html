@@ -252,10 +252,10 @@
             transition: stroke 1.2s ease, fill 1.2s ease, filter 1.2s ease;
         }
         .seal-skull.lit {
-            stroke: rgba(150,255,185,0.92) !important;
-            fill:   rgba(150,255,185,0.12) !important;
-            filter: drop-shadow(0 0 5px rgba(140,255,175,0.82))
-                    drop-shadow(0 0 18px rgba(100,240,155,0.48));
+            stroke: rgba(192,154,224,0.92) !important;
+            fill:   rgba(192,154,224,0.12) !important;
+            filter: drop-shadow(0 0 5px rgba(192,154,224,0.82))
+                    drop-shadow(0 0 18px rgba(170,120,220,0.48));
         }
 
         /* ── Divider ── */
@@ -766,7 +766,7 @@ function illuminateSeal(index) {
 function triggerFlash(type) {
     if (reducedMotion) return;
     riddleFlashEl.style.background = type === 'correct'
-        ? 'rgba(140,255,180,1)'
+        ? 'rgba(192,154,224,1)'
         : 'rgba(8,0,0,1)';
     const strength = type === 'correct' ? '0.48' : '0.75';
     riddleFlashEl.style.transition = 'opacity 0.06s linear';

@@ -303,6 +303,79 @@
             letter-spacing: 0.22em;
         }
 
+        .victory-sub {
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            font-style: italic;
+            font-weight: 300;
+            font-size: clamp(0.70rem, 1.5vw, 0.92rem);
+            letter-spacing: 0.03em;
+            line-height: 1.8;
+            color: rgba(255,252,235,0.42);
+            text-shadow: 0 1px 6px rgba(0,0,0,0.55);
+            margin-top: clamp(0.5rem, 1.4vh, 1.1rem);
+        }
+
+        /* ── PRIZE LINK ── */
+        .prize-link {
+            display: inline-block;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.58rem, 1.1vw, 0.76rem);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: rgba(255,240,190,0.80);
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0;
+            margin-top: clamp(0.4rem, 1vh, 0.9rem);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .prize-link.visible {
+            animation: fadeSlideUp 2s ease-out forwards;
+            pointer-events: auto;
+        }
+        .prize-link:hover,
+        .prize-link:focus-visible {
+            color: rgba(255,250,210,1);
+            filter: drop-shadow(0 0 8px rgba(255,225,120,0.50));
+            outline: none;
+        }
+
+        /* ── SUBMISSION REMINDER (sibling of victoryBlock, revealed after prize link) ── */
+        #subReminder {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #subReminder.visible {
+            animation: fadeSlideUp 2s ease-out forwards;
+        }
+
+        /* ── PRIZE OVERLAY ── */
+        #prizeOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.82);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        #prizeOverlay.open {
+            display: flex;
+        }
+        #prizeCard {
+            max-width: min(90vw, 520px);
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 0 0 60px rgba(255,220,130,0.18), 0 0 120px rgba(255,200,80,0.08);
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
         /* ── GOD COLOURS ── */
         .c-zeus     { color: #e8d472; }
         .c-poseidon { color: #72b8d8; }
@@ -398,7 +471,9 @@
             #symbolsRow.visible,
             #quoteText.visible,
             #victoryBlock.visible,
-            #returnGate.visible {
+            #returnGate.visible,
+            .prize-link.visible,
+            #subReminder.visible {
                 animation: none;
                 opacity: 1;
             }
@@ -737,6 +812,11 @@
 <!-- Understated prompt shown only when autoplay is blocked on 1/2-path direct reveal -->
 <button id="audioPrompt" aria-label="Begin">✦ BEGIN ✦</button>
 
+<!-- Prize image overlay (3-path completion only) -->
+<div id="prizeOverlay" role="dialog" aria-label="The prize" aria-modal="true" tabindex="-1">
+    <img id="prizeCard" src="Resources/WildCardBack.png" alt="">
+</div>
+
 <script>
 /* ── ACCESS GATE ── */
 (function () {
@@ -1006,10 +1086,11 @@
         var poem = document.createElement('div');
         poem.className = 'victory-poem c-moonlit';
         poem.innerHTML =
-            'The dead spoke your name. The sky bore witness.<br>' +
+            'The dead spoke your name.<br>' +
+            'The sky bore witness.<br>' +
             'The sea carried you beyond the final shore.<br>' +
             'Three paths. Three realms. One final discovery.<br>' +
-            '<em>Congratulations\u2014the final discovery belongs to you.</em>';
+            'You have completed all three paths and uncovered what waited beyond.';
         victoryBlock.appendChild(poem);
     } else if (n === 2) {
         completedPaths.forEach(function (god) {
@@ -1022,7 +1103,7 @@
         closing.className = 'victory-poem c-moonlit';
         closing.innerHTML =
             'Two realms now bear witness to your journey.<br>' +
-            '<em>Congratulations\u2014the final discovery belongs to you.</em>';
+            'You have completed two paths and uncovered both hidden marks.';
         victoryBlock.appendChild(closing);
     } else {
         /* n === 1 */
@@ -1031,7 +1112,7 @@
         oneLine.className = 'victory-poem ' + (COLOR_CLASS[god0] || '');
         oneLine.innerHTML =
             (ONE_PATH_LINE[god0] || '') +
-            '<br><em>Congratulations\u2014the final discovery belongs to you.</em>';
+            '<br>You have completed this path and uncovered its hidden mark.';
         victoryBlock.appendChild(oneLine);
     }
 
@@ -1039,8 +1120,31 @@
     var ptsEl  = document.createElement('div');
     var ptsCls = (n === 1) ? (COLOR_CLASS[completedPaths[0]] || 'c-moonlit') : 'c-moonlit';
     ptsEl.className = 'victory-points ' + ptsCls;
-    ptsEl.innerHTML = pts + ' <span class="points-label">POINTS</span>';
+    ptsEl.innerHTML = pts + ' <span class="points-label">POINTS AT STAKE</span>';
     victoryBlock.appendChild(ptsEl);
+
+    /* Prize link + submission reminder — siblings of victoryBlock inside .victory-inner */
+    var victoryInner = victoryBlock.parentNode;
+
+    if (n === 3) {
+        var prizeLink = document.createElement('button');
+        prizeLink.type = 'button';
+        prizeLink.className = 'prize-link';
+        prizeLink.textContent = 'REVEAL THE PRIZE';
+        victoryInner.appendChild(prizeLink);
+
+        window._revealPrize = function () {
+            if (prefersReduced) { prizeLink.style.opacity = '1'; }
+            else                { prizeLink.classList.add('visible'); }
+            prizeLink.style.pointerEvents = 'auto';
+        };
+    }
+
+    var subEl = document.createElement('div');
+    subEl.id = 'subReminder';
+    subEl.className = 'victory-sub';
+    subEl.textContent = 'Capture this moment. The order of submission will determine who claims the reward.';
+    victoryInner.appendChild(subEl);
 
     /* ── Expose reveal hooks for scheduleQuote ── */
     window._revealSymbols = function () {
@@ -1050,6 +1154,10 @@
     window._revealVictory = function () {
         if (prefersReduced) { victoryBlock.style.opacity = '1'; }
         else                { victoryBlock.classList.add('visible'); }
+    };
+    window._revealSub = function () {
+        if (prefersReduced) { subEl.style.opacity = '1'; }
+        else                { subEl.classList.add('visible'); }
     };
 })();
 
@@ -1129,10 +1237,20 @@
             if (window._revealVictory) window._revealVictory();
         }, 22000);
 
-        /* 4. Return gate: 22s + 2.5s anim + 0.5s = 25s */
+        /* 4. Prize link (3-path only): 22s + 2s anim = 24s */
+        setTimeout(function () {
+            if (window._revealPrize) window._revealPrize();
+        }, 24000);
+
+        /* 5. Submission reminder: 24s + 2s = 26s */
+        setTimeout(function () {
+            if (window._revealSub) window._revealSub();
+        }, 26000);
+
+        /* 6. Return gate: 26s + 2s anim + 1s buffer = 29s */
         setTimeout(function () {
             if (window._revealGate) window._revealGate();
-        }, 25000);
+        }, 29000);
     }
 
     if (document.documentElement.classList.contains('wc-state-three')) {
@@ -1152,6 +1270,7 @@
 
     } else {
         /* ── One or two paths: show distant tease for ~4s then auto-fade ── */
+        /* (scheduleQuote called below — prize/sub hooks are no-ops for 1/2 paths) */
         const screen = document.getElementById('wildcardScreen');
         const prompt = document.getElementById('audioPrompt');
 
@@ -1182,6 +1301,46 @@
             setTimeout(function () { screen.style.display = 'none'; }, 1800);
         }, 4000);
     }
+})();
+
+/* ══════════════════════════════════════
+   PRIZE OVERLAY (3-path only)
+══════════════════════════════════════ */
+(function () {
+    var overlay = document.getElementById('prizeOverlay');
+    if (!overlay) return;
+
+    var lastFocus = null;
+
+    function openOverlay() {
+        lastFocus = document.activeElement;
+        overlay.classList.add('open');
+        overlay.focus();
+    }
+
+    function closeOverlay() {
+        overlay.classList.remove('open');
+        if (lastFocus) lastFocus.focus();
+    }
+
+    /* Close on backdrop click (not on image click) */
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeOverlay();
+    });
+
+    /* Close on Escape */
+    document.addEventListener('keydown', function (e) {
+        if ((e.key === 'Escape' || e.key === 'Esc') && overlay.classList.contains('open')) {
+            closeOverlay();
+        }
+    });
+
+    /* Wire up the prize link once it exists */
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('prize-link')) {
+            openOverlay();
+        }
+    });
 })();
 </script>
 </body>
