@@ -477,7 +477,12 @@
                 animation: none;
                 opacity: 1;
             }
-            .mist-float, .mist-float-2 { animation: none; }
+            #partialScene.visible {
+                transition: none;
+                opacity: 1;
+            }
+            .mist-float, .mist-float-2,
+            .p-mist-1, .p-mist-2, .p-mist-3 { animation: none; }
         }
 
         .click-prompt.hide { opacity: 0; }
@@ -601,40 +606,137 @@
             to   { opacity: 0.54; }
         }
 
-        /* ── AUDIO PROMPT (autoplay blocked on 1/2-path auto reveal) ── */
-        #audioPrompt {
+        /* ══════════════════════════════════════
+           PARTIAL MODE — HIDE FULL ENDING ELEMENTS
+           (applied by wc-state-one / wc-state-two set before first paint)
+        ══════════════════════════════════════ */
+
+        /* Mountain scene and Walter Mitty quote are exclusive to three-path ending */
+        html.wc-state-one .scene,
+        html.wc-state-two .scene { display: none !important; }
+
+        html.wc-state-one #quoteText,
+        html.wc-state-two #quoteText { display: none !important; }
+
+        /* No quote above symbols in partial mode — collapse the extra breathing margin */
+        html.wc-state-one #symbolsRow,
+        html.wc-state-two #symbolsRow { margin-top: 0; }
+
+        /* ══════════════════════════════════════
+           PARTIAL BACKGROUND SCENE
+        ══════════════════════════════════════ */
+
+        /* Hidden by default; shown only in partial states */
+        #partialScene {
             display: none;
             position: fixed;
-            bottom: 7%;
+            inset: 0;
+            z-index: 5;
+            background: radial-gradient(
+                ellipse 110% 75% at 50% 20%,
+                #100826 0%,
+                #080416 45%,
+                #030510 100%
+            );
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 2.2s ease;
+        }
+        html.wc-state-one #partialScene,
+        html.wc-state-two #partialScene { display: block; }
+        #partialScene.visible { opacity: 1; }
+
+        /* Distant glow — hint of something beyond the threshold */
+        #partialGlow {
+            position: absolute;
+            top: 8%;
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Cinzel', serif;
-            font-size: clamp(0.58rem, 1.1vw, 0.76rem);
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            color: rgba(255,240,200,0.45);
-            background: transparent;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            white-space: nowrap;
-            animation: breathe 3.2s ease-in-out infinite;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-appearance: none;
-            appearance: none;
-            z-index: 10;
-            padding: 0.5rem 1rem;
+            width: clamp(180px, 40vw, 520px);
+            height: clamp(70px, 16vw, 200px);
+            background: radial-gradient(
+                ellipse at center,
+                rgba(80, 55, 160, 0.14) 0%,
+                rgba(50, 28, 100, 0.07) 50%,
+                transparent 75%
+            );
+            pointer-events: none;
+            filter: blur(22px);
         }
-        @media (max-width: 600px) {
-            #audioPrompt {
-                font-size: 0.6rem;
-                letter-spacing: 0.22em;
-                white-space: normal;
-                text-align: center;
-                width: 80%;
-                left: 10%;
-                transform: none;
-            }
+
+        /* Ancient archway SVG */
+        #partialArch {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(300px, 64vw, 860px);
+            height: auto;
+            pointer-events: none;
+            opacity: 0.08;
+        }
+
+        /* Drifting dark mists */
+        .p-mist {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            filter: blur(36px);
+        }
+        .p-mist-1 {
+            bottom: 8%;
+            left: -12%;
+            width: 130%;
+            height: 24%;
+            background: linear-gradient(
+                to top,
+                rgba(12, 5, 30, 0.92) 0%,
+                rgba(8, 3, 20, 0.52) 50%,
+                transparent 100%
+            );
+            animation: pMistDrift 34s ease-in-out infinite alternate;
+        }
+        .p-mist-2 {
+            bottom: 26%;
+            left: -22%;
+            width: 145%;
+            height: 16%;
+            background: linear-gradient(
+                to top,
+                rgba(10, 4, 26, 0.55) 0%,
+                rgba(7, 2, 18, 0.25) 55%,
+                transparent 100%
+            );
+            animation: pMistDrift 48s ease-in-out infinite alternate-reverse;
+        }
+        .p-mist-3 {
+            bottom: 44%;
+            left: -18%;
+            width: 136%;
+            height: 11%;
+            background: linear-gradient(
+                to top,
+                rgba(9, 4, 24, 0.32) 0%,
+                transparent 100%
+            );
+            animation: pMistDrift 60s ease-in-out infinite alternate;
+        }
+        @keyframes pMistDrift {
+            0%   { transform: translateX(0)    scaleY(1);    opacity: 0.70; }
+            50%  { transform: translateX(4.5%) scaleY(1.07); opacity: 1;    }
+            100% { transform: translateX(9%)   scaleY(0.95); opacity: 0.72; }
+        }
+
+        /* Partial scene vignette */
+        .p-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                ellipse at 50% 48%,
+                transparent 28%,
+                rgba(0, 0, 0, 0.70) 100%
+            );
+            pointer-events: none;
         }
     </style>
 <script>
@@ -777,6 +879,58 @@
 
 </div><!-- /.scene -->
 
+<!-- Dark mystical partial-completion background (shown only for wc-state-one / wc-state-two) -->
+<div id="partialScene">
+
+    <!-- Faint glow beyond the threshold -->
+    <div id="partialGlow"></div>
+
+    <!-- Ancient archway — very faint, suggesting ruins in darkness -->
+    <svg id="partialArch" viewBox="0 0 1000 900" preserveAspectRatio="xMidYMax meet"
+         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <g fill="none" stroke="rgba(210,202,248,1)" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Pediment (gable triangle) -->
+            <polyline points="52,220 500,38 948,220" stroke-width="8"/>
+            <!-- Entablature (horizontal beam) -->
+            <rect x="52" y="220" width="896" height="30" stroke-width="4"/>
+            <!-- Frieze detail -->
+            <line x1="52"  y1="236" x2="948" y2="236" stroke-width="1.5" stroke-opacity="0.4"/>
+            <!-- Left column body -->
+            <rect x="116" y="250" width="60" height="650" stroke-width="3.5"/>
+            <!-- Left capital -->
+            <rect x="96"  y="236" width="100" height="14" stroke-width="3"/>
+            <!-- Left column fluting -->
+            <line x1="136" y1="250" x2="136" y2="900" stroke-width="1.2" stroke-opacity="0.42"/>
+            <line x1="152" y1="250" x2="152" y2="900" stroke-width="1.2" stroke-opacity="0.42"/>
+            <line x1="168" y1="250" x2="168" y2="900" stroke-width="1.2" stroke-opacity="0.42"/>
+            <!-- Right column body -->
+            <rect x="824" y="250" width="60" height="650" stroke-width="3.5"/>
+            <!-- Right capital -->
+            <rect x="804" y="236" width="100" height="14" stroke-width="3"/>
+            <!-- Right column fluting -->
+            <line x1="844" y1="250" x2="844" y2="900" stroke-width="1.2" stroke-opacity="0.42"/>
+            <line x1="860" y1="250" x2="860" y2="900" stroke-width="1.2" stroke-opacity="0.42"/>
+            <line x1="876" y1="250" x2="876" y2="900" stroke-width="1.2" stroke-opacity="0.42"/>
+            <!-- Archway opening (arch curve) -->
+            <path d="M176,250 Q500,86 824,250" stroke-width="10" stroke-linecap="butt"/>
+            <!-- Inner arch detail line -->
+            <path d="M198,258 Q500,106 802,258" stroke-width="2.5" stroke-opacity="0.48"/>
+            <!-- Base steps -->
+            <line x1="36"  y1="876" x2="964" y2="876" stroke-width="6"/>
+            <line x1="16"  y1="890" x2="984" y2="890" stroke-width="4"/>
+        </g>
+    </svg>
+
+    <!-- Drifting dark mists -->
+    <div class="p-mist p-mist-1"></div>
+    <div class="p-mist p-mist-2"></div>
+    <div class="p-mist p-mist-3"></div>
+
+    <!-- Restrained vignette -->
+    <div class="p-vignette"></div>
+
+</div><!-- /#partialScene -->
+
 <!-- Victory composition overlay (fixed, scrollable on short screens) -->
 <div id="victoryWrap">
     <div class="victory-inner">
@@ -809,9 +963,6 @@
     </svg>
 </a>
 
-<!-- Understated prompt shown only when autoplay is blocked on 1/2-path direct reveal -->
-<button id="audioPrompt" aria-label="Begin">✦ BEGIN ✦</button>
-
 <!-- Prize image overlay (3-path completion only) -->
 <div id="prizeOverlay" role="dialog" aria-label="The prize" aria-modal="true" tabindex="-1">
     <img id="prizeCard" src="Resources/WildCardBack.png" alt="">
@@ -829,9 +980,10 @@
 })();
 
 /* ══════════════════════════════════════
-   TWINKLING STAR CANVAS
+   TWINKLING STAR CANVAS (three-path ending only)
 ══════════════════════════════════════ */
 (function () {
+    if (!document.documentElement.classList.contains('wc-state-three')) return;
     const canvas = document.getElementById('starCanvas');
     const ctx    = canvas.getContext('2d');
     let   stars  = [];
@@ -868,9 +1020,10 @@
 })();
 
 /* ══════════════════════════════════════
-   FIREFLIES
+   FIREFLIES (three-path ending only)
 ══════════════════════════════════════ */
 (function () {
+    if (!document.documentElement.classList.contains('wc-state-three')) return;
     const scene = document.getElementById('scene');
 
     function spawn() {
@@ -955,6 +1108,39 @@
         symbolsRow.style.display   = 'none';
         victoryBlock.style.display = 'none';
         return;
+    }
+
+    /* ── Inject subtle house-colour ambient hints into partial scene ── */
+    if (completedPaths.length < 3) {
+        var partSc = document.getElementById('partialScene');
+        if (partSc) {
+            var HOUSE_GLOW_CLR = {
+                zeus:     'rgba(232,212,114,0.08)',
+                poseidon: 'rgba(114,184,216,0.08)',
+                hades:    'rgba(192,154,224,0.08)'
+            };
+            var HINT_POS = [
+                { left: '20%', top: '58%' },
+                { left: '78%', top: '64%' }
+            ];
+            completedPaths.forEach(function (god, i) {
+                var pos  = HINT_POS[i] || HINT_POS[0];
+                var hint = document.createElement('div');
+                hint.style.cssText = [
+                    'position:absolute',
+                    'pointer-events:none',
+                    'border-radius:50%',
+                    'width:clamp(130px,30vw,320px)',
+                    'height:clamp(65px,15vw,160px)',
+                    'background:radial-gradient(ellipse at center,' + HOUSE_GLOW_CLR[god] + ' 0%,transparent 70%)',
+                    'filter:blur(30px)',
+                    'left:' + pos.left,
+                    'top:' + pos.top,
+                    'transform:translate(-50%,-50%)'
+                ].join(';');
+                partSc.appendChild(hint);
+            });
+        }
     }
 
     /* ── SVG namespace helper ── */
@@ -1215,51 +1401,55 @@
 
 /* ══════════════════════════════════════
    AUDIO + REVEAL
+   Three-path: full cinematic ending with WakeUp.mp3 and mountain scene.
+   One / Two-path: no audio, dark mystical partial scene, shorter reveals.
 ══════════════════════════════════════ */
 (function () {
-    const audio = new Audio('Resources/WakeUp.mp3');
-    audio.loop  = true;
-    window._bgAudio = audio; /* exposed so the return gate can fade audio before navigating */
+    var isThree = document.documentElement.classList.contains('wc-state-three');
 
-    function scheduleQuote() {
-        /* 1. Quote at 14s */
-        setTimeout(function () {
-            document.getElementById('quoteText').classList.add('visible');
-        }, 14000);
+    if (isThree) {
+        /* ── THREE PATHS: full cinematic ending (unchanged) ── */
+        var audio = new Audio('Resources/WakeUp.mp3');
+        audio.loop = true;
+        window._bgAudio = audio; /* exposed so return gate can fade before navigating */
 
-        /* 2. Symbols: 14s + 3.5s anim + 1.5s pause = 19s */
-        setTimeout(function () {
-            if (window._revealSymbols) window._revealSymbols();
-        }, 19000);
+        function scheduleQuote() {
+            /* 1. Walter Mitty quote at 14s */
+            setTimeout(function () {
+                document.getElementById('quoteText').classList.add('visible');
+            }, 14000);
 
-        /* 3. Victory block: 19s + 2s anim + 1s buffer = 22s */
-        setTimeout(function () {
-            if (window._revealVictory) window._revealVictory();
-        }, 22000);
+            /* 2. Symbols: 14s + 3.5s anim + 1.5s pause = 19s */
+            setTimeout(function () {
+                if (window._revealSymbols) window._revealSymbols();
+            }, 19000);
 
-        /* 4. Prize link (3-path only): 22s + 2s anim = 24s */
-        setTimeout(function () {
-            if (window._revealPrize) window._revealPrize();
-        }, 24000);
+            /* 3. Victory block: 19s + 2s anim + 1s buffer = 22s */
+            setTimeout(function () {
+                if (window._revealVictory) window._revealVictory();
+            }, 22000);
 
-        /* 5. Submission reminder: 24s + 2s = 26s */
-        setTimeout(function () {
-            if (window._revealSub) window._revealSub();
-        }, 26000);
+            /* 4. Prize link: 22s + 2s anim = 24s */
+            setTimeout(function () {
+                if (window._revealPrize) window._revealPrize();
+            }, 24000);
 
-        /* 6. Return gate: 26s + 2s anim + 1s buffer = 29s */
-        setTimeout(function () {
-            if (window._revealGate) window._revealGate();
-        }, 29000);
-    }
+            /* 5. Submission reminder: 24s + 2s = 26s */
+            setTimeout(function () {
+                if (window._revealSub) window._revealSub();
+            }, 26000);
 
-    if (document.documentElement.classList.contains('wc-state-three')) {
-        /* ── Three paths: existing wildcard card-flip flow ── */
-        const screen = document.getElementById('wildcardScreen');
+            /* 6. Return gate: 26s + 2s anim + 1s buffer = 29s */
+            setTimeout(function () {
+                if (window._revealGate) window._revealGate();
+            }, 29000);
+        }
+
+        var screen = document.getElementById('wildcardScreen');
         document.getElementById('cardContainer').addEventListener('click', function () {
             document.getElementById('cardInner').classList.add('flipped');
             setTimeout(function () {
-                screen.style.opacity = '0';
+                screen.style.opacity      = '0';
                 screen.style.pointerEvents = 'none';
                 setTimeout(function () { screen.style.display = 'none'; }, 1800);
             }, 900);
@@ -1269,36 +1459,46 @@
         }, { once: true });
 
     } else {
-        /* ── One or two paths: show distant tease for ~4s then auto-fade ── */
-        /* (scheduleQuote called below — prize/sub hooks are no-ops for 1/2 paths) */
-        const screen = document.getElementById('wildcardScreen');
-        const prompt = document.getElementById('audioPrompt');
+        /* ── ONE OR TWO PATHS: dark mystical partial ending — NO audio, NO mountain ── */
+        var screen       = document.getElementById('wildcardScreen');
+        var partialScene = document.getElementById('partialScene');
 
-        function startReveal() {
-            if (prompt) prompt.style.display = 'none';
-            scheduleQuote();
+        /* Called after wildcard has fully faded and partial scene is visible */
+        function schedulePartialReveal() {
+            /* T+1.5s: house symbols */
+            setTimeout(function () {
+                if (window._revealSymbols) window._revealSymbols();
+            }, 1500);
+
+            /* T+3.5s: victory heading, poem and points */
+            setTimeout(function () {
+                if (window._revealVictory) window._revealVictory();
+            }, 3500);
+
+            /* T+5.5s: submission reminder */
+            setTimeout(function () {
+                if (window._revealSub) window._revealSub();
+            }, 5500);
+
+            /* T+7.5s: return gate */
+            setTimeout(function () {
+                if (window._revealGate) window._revealGate();
+            }, 7500);
         }
 
-        function attemptAudio() {
-            audio.play().then(startReveal).catch(function () {
-                /* Autoplay blocked — prompt appears in mountain scene once card screen is gone */
-                if (prompt) {
-                    prompt.style.display = 'block';
-                    prompt.addEventListener('click', function () {
-                        audio.play().catch(function () {}).then(startReveal);
-                    }, { once: true });
-                } else {
-                    startReveal();
-                }
-            });
-        }
-
-        /* Auto-fade the teaser card after ~4 s, start audio at the same moment */
+        /* Auto-fade the teaser after ~4s; simultaneously reveal the dark scene behind it */
         setTimeout(function () {
-            screen.style.opacity = '0';
+            screen.style.opacity       = '0';
             screen.style.pointerEvents = 'none';
-            attemptAudio();
-            setTimeout(function () { screen.style.display = 'none'; }, 1800);
+
+            /* Start partial scene fade-in while wildcard fades (both are dark so transition is seamless) */
+            if (partialScene) partialScene.classList.add('visible');
+
+            /* After wildcard transition completes, begin sequential content reveals */
+            setTimeout(function () {
+                screen.style.display = 'none';
+                schedulePartialReveal();
+            }, 2000);
         }, 4000);
     }
 })();
@@ -1307,6 +1507,7 @@
    PRIZE OVERLAY (3-path only)
 ══════════════════════════════════════ */
 (function () {
+    if (!document.documentElement.classList.contains('wc-state-three')) return;
     var overlay = document.getElementById('prizeOverlay');
     if (!overlay) return;
 

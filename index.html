@@ -190,6 +190,11 @@
             transform: translateY(-4px) scale(1.1);
         }
 
+        /* Disable symbols while popup is open */
+        body.popup-open .symbol-item {
+            pointer-events: none !important;
+        }
+
         /* ── PAGE TRANSITION – FADE + DIRECTIONAL ZOOM ── */
         /* Screen fades to black while zooming toward the destination —
            no visible colour pop, no hard edge, fully cinematic */
@@ -225,6 +230,7 @@
             from { transform: scale(1)    translateY(0);   }
             to   { transform: scale(1.18) translateY(-8%); }
         }
+
         /* ── BAN OVERLAY ── */
         #ban-overlay {
             position: fixed; inset: 0; z-index: 500;
@@ -250,6 +256,176 @@
             font-size: clamp(0.46rem,0.9vw,0.56rem);
             letter-spacing: 0.28em; text-transform: uppercase;
             color: rgba(130,25,12,0.55); margin-top: 1.4em; text-align: center;
+        }
+
+        /* ── INFO ICON ── */
+        #info-icon {
+            position: fixed;
+            top: max(16px, env(safe-area-inset-top, 16px));
+            right: max(16px, env(safe-area-inset-right, 16px));
+            z-index: 210;
+            background: none;
+            border: none;
+            cursor: pointer;
+            /* large invisible touch target */
+            padding: 12px;
+            color: rgba(172, 155, 105, 0.38);
+            transition: color 0.3s ease, filter 0.3s ease;
+            line-height: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        #info-icon svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+        #info-icon:hover,
+        #info-icon:focus-visible {
+            color: rgba(200, 183, 138, 0.80);
+            filter: drop-shadow(0 0 7px rgba(200, 175, 100, 0.32));
+            outline: none;
+        }
+        body.popup-open #info-icon {
+            display: none;
+        }
+
+        /* ── INFO POPUP OVERLAY ── */
+        #info-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            align-items: flex-start;
+            justify-content: center;
+            padding: clamp(1.8rem, 5vh, 3.5rem) clamp(12px, 4vw, 24px);
+            opacity: 0;
+            background: transparent;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            transition: opacity 0.42s ease, background 0.42s ease,
+                        backdrop-filter 0.42s ease, -webkit-backdrop-filter 0.42s ease;
+        }
+        #info-overlay.open {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.84);
+            backdrop-filter: blur(9px);
+            -webkit-backdrop-filter: blur(9px);
+        }
+
+        /* ── INFO PANEL ── */
+        #info-panel {
+            position: relative;
+            width: 100%;
+            max-width: 620px;
+            margin: auto;
+            padding: clamp(1.9rem, 5vw, 3.1rem) clamp(1.6rem, 5vw, 2.9rem);
+            background: radial-gradient(ellipse at 50% 0%,
+                rgba(22, 18, 40, 0.99) 0%, rgba(6, 5, 12, 0.99) 70%);
+            border: 1px solid rgba(152, 132, 78, 0.20);
+            box-shadow:
+                0 0 0 1px rgba(95, 80, 40, 0.08),
+                0 10px 52px rgba(0, 0, 0, 0.72),
+                inset 0 1px 0 rgba(175, 155, 95, 0.06);
+        }
+
+        /* Corner ornaments */
+        .info-corner {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            color: rgba(150, 130, 75, 0.36);
+            pointer-events: none;
+        }
+        .info-corner.tl { top: -1px;    left: -1px;  }
+        .info-corner.tr { top: -1px;    right: -1px; transform: scaleX(-1); }
+        .info-corner.bl { bottom: -1px; left: -1px;  transform: scaleY(-1); }
+        .info-corner.br { bottom: -1px; right: -1px; transform: scale(-1, -1); }
+
+        /* Popup heading */
+        #info-popup-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.70rem, 2vw, 0.90rem);
+            letter-spacing: 0.38em;
+            text-transform: uppercase;
+            color: rgba(198, 180, 132, 0.90);
+            text-align: center;
+            margin-bottom: 0.65em;
+        }
+        #info-popup-title:focus { outline: none; }
+
+        .info-lead {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.56rem, 1.3vw, 0.67rem);
+            letter-spacing: 0.18em;
+            color: rgba(170, 155, 115, 0.48);
+            text-align: center;
+            margin-bottom: 2em;
+        }
+        .info-divider {
+            border: none;
+            border-top: 1px solid rgba(136, 115, 62, 0.15);
+            margin: 1.65em 0;
+        }
+        .info-section-heading {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.52rem, 1.15vw, 0.63rem);
+            letter-spacing: 0.46em;
+            text-transform: uppercase;
+            color: rgba(165, 145, 92, 0.65);
+            margin-bottom: 0.75em;
+        }
+        .info-body {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.59rem, 1.4vw, 0.71rem);
+            letter-spacing: 0.09em;
+            line-height: 2.05;
+            color: rgba(208, 198, 170, 0.68);
+        }
+        /* YOU ARE THE THIEF */
+        .info-thief-reveal {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.59rem, 1.4vw, 0.71rem);
+            letter-spacing: 0.09em;
+            font-weight: 600;
+            color: rgba(208, 198, 170, 0.68);
+            display: block;
+            margin-top: 0.55em;
+        }
+        /* Closing */
+        .info-closing {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.56rem, 1.3vw, 0.68rem);
+            letter-spacing: 0.27em;
+            color: rgba(182, 167, 126, 0.50);
+            text-align: center;
+            line-height: 2.3;
+        }
+        /* Acknowledge button */
+        #info-begin-btn {
+            display: block;
+            margin: 2.3em auto 0;
+            padding: 0.9em 2.4em;
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.56rem, 1.25vw, 0.68rem);
+            letter-spacing: 0.40em;
+            text-transform: uppercase;
+            color: rgba(192, 175, 124, 0.80);
+            background: transparent;
+            border: 1px solid rgba(165, 145, 88, 0.26);
+            cursor: pointer;
+            transition: color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+        #info-begin-btn:hover,
+        #info-begin-btn:focus-visible {
+            color: rgba(218, 202, 154, 0.96);
+            border-color: rgba(190, 170, 100, 0.52);
+            box-shadow: 0 0 18px rgba(190, 168, 100, 0.16);
+            outline: none;
         }
     </style>
 </head>
@@ -321,9 +497,123 @@
     <!-- Page transition overlay -->
     <div id="trans-overlay"></div>
 
+    <!-- ── INFO ICON ── -->
+    <button id="info-icon" aria-label="Open instructions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="8.2" r="0.55" fill="currentColor" stroke="none"/>
+            <line x1="12" y1="11.4" x2="12" y2="16.2"/>
+        </svg>
+    </button>
+
+    <!-- ── INFO POPUP ── -->
+    <div id="info-overlay" role="dialog" aria-modal="true" aria-labelledby="info-popup-title">
+        <div id="info-panel">
+
+            <!-- Corner ornaments – L-bracket at each corner -->
+            <svg class="info-corner tl" viewBox="0 0 26 26" fill="none"
+                 stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <polyline points="25,1 1,1 1,25"/>
+            </svg>
+            <svg class="info-corner tr" viewBox="0 0 26 26" fill="none"
+                 stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <polyline points="25,1 1,1 1,25"/>
+            </svg>
+            <svg class="info-corner bl" viewBox="0 0 26 26" fill="none"
+                 stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <polyline points="25,1 1,1 1,25"/>
+            </svg>
+            <svg class="info-corner br" viewBox="0 0 26 26" fill="none"
+                 stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <polyline points="25,1 1,1 1,25"/>
+            </svg>
+
+            <!-- Heading -->
+            <h2 id="info-popup-title" tabindex="-1">Before You Answer the Call</h2>
+            <p class="info-lead">Please read this carefully before proceeding.</p>
+
+            <hr class="info-divider">
+
+            <!-- THE PATH -->
+            <p class="info-section-heading">The Path</p>
+            <p class="info-body">
+                Choose your House, find the password entrusted to it, and follow the path
+                that opens before you.<br><br>
+                The path is not complicated and should take approximately 5–10 minutes
+                to complete.<br><br>
+                Complete your path... but for the ones who need more, the world is
+                your oyster.
+            </p>
+
+            <hr class="info-divider">
+
+            <!-- THE PASSWORD -->
+            <p class="info-section-heading">The Password</p>
+            <p class="info-body">
+                If you cannot find the password, you may be trying to find it among
+                the living.
+            </p>
+
+            <hr class="info-divider">
+
+            <!-- CLAIMING THE REWARD -->
+            <p class="info-section-heading">Claiming the Reward</p>
+            <p class="info-body">
+                Reaching the rewards page does not automatically claim its points.<br><br>
+                To make a valid claim, capture a screenshot of the rewards page and post it
+                in the House Cup – Westpay WhatsApp group.<br><br>
+                Where order matters, the first valid screenshot posted in the group will
+                claim the available reward.<br><br>
+                Your screenshot must clearly show the revealed House symbol or symbols and
+                the points displayed on the page.
+            </p>
+
+            <hr class="info-divider">
+
+            <!-- REMEMBER YOUR JOURNEY -->
+            <p class="info-section-heading">Remember Your Journey</p>
+            <p class="info-body">
+                Complete your journey using the same device and browser.<br><br>
+                Your progress may not follow you into another browser, another device or
+                private-browsing mode.<br><br>
+                Do not clear your browser data while the challenge is active. What the
+                browser forgets, the gods will not restore.
+            </p>
+
+            <hr class="info-divider">
+
+            <!-- THE WARNING -->
+            <p class="info-body">
+                Do not cheat, but no one is watching... I think.<br><br>
+                If your intention is to steal, be warned...<br><br>
+                Unless, of course...
+            </p>
+            <span class="info-thief-reveal">YOU ARE THE THIEF.</span>
+
+            <hr class="info-divider">
+
+            <!-- CLOSING -->
+            <p class="info-closing">
+                The paths are open.<br>
+                The gods are listening.<br>
+                Answer carefully.
+            </p>
+
+            <!-- BUTTON -->
+            <button id="info-begin-btn" type="button">I UNDERSTAND — BEGIN</button>
+
+        </div><!-- /#info-panel -->
+    </div><!-- /#info-overlay -->
+
     <script>
         /* ── BAN CHECK ── */
         function showBanOverlay(expiresAt) {
+            // Hide info icon — ban screen takes priority
+            var iconEl = document.getElementById('info-icon');
+            if (iconEl) iconEl.style.display = 'none';
+
             document.querySelectorAll('.symbol-item').forEach(el => {
                 el.style.pointerEvents = 'none';
                 el.style.opacity = '0.12';
@@ -346,6 +636,10 @@
                         el.style.pointerEvents = '';
                         el.style.opacity = '';
                     });
+                    // Restore icon, then show info popup only if never acknowledged
+                    var iconEl2 = document.getElementById('info-icon');
+                    if (iconEl2) iconEl2.style.display = '';
+                    if (window._openInfoPopupIfNeeded) window._openInfoPopupIfNeeded();
                     return;
                 }
                 var mm = String(Math.floor(rem / 60000)).padStart(2,'0');
@@ -355,9 +649,105 @@
             }
             tick();
         }
-        (function(){
-            var exp = parseInt(localStorage.getItem('ban_expires')||'0', 10);
-            if (Date.now() < exp) { showBanOverlay(exp); }
+
+        /* ── INFO POPUP ── */
+        (function () {
+            var overlay  = document.getElementById('info-overlay');
+            var panel    = document.getElementById('info-panel');
+            var beginBtn = document.getElementById('info-begin-btn');
+            var infoIcon = document.getElementById('info-icon');
+            var titleEl  = document.getElementById('info-popup-title');
+            var _firstVisit    = false;
+            var _docKeyHandler = null;
+
+            function openInfoPopup(firstVisit) {
+                _firstVisit = firstVisit;
+                overlay.style.display = 'flex';
+                // Double rAF: let display:flex render before the CSS transition fires
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(function () {
+                        overlay.classList.add('open');
+                    });
+                });
+                document.body.classList.add('popup-open');
+                // Move focus to heading
+                setTimeout(function () { titleEl.focus(); }, 60);
+
+                _docKeyHandler = function (e) {
+                    // Focus trap inside panel
+                    if (e.key === 'Tab') {
+                        var focusable = Array.prototype.slice.call(
+                            panel.querySelectorAll(
+                                'button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                            )
+                        );
+                        if (!focusable.length) return;
+                        var first = focusable[0];
+                        var last  = focusable[focusable.length - 1];
+                        if (e.shiftKey) {
+                            if (document.activeElement === first) {
+                                e.preventDefault(); last.focus();
+                            }
+                        } else {
+                            if (document.activeElement === last) {
+                                e.preventDefault(); first.focus();
+                            }
+                        }
+                    }
+                    // Escape only closes manual reopens — not first-visit
+                    if (e.key === 'Escape' && !_firstVisit) {
+                        closeInfoPopup();
+                    }
+                };
+                document.addEventListener('keydown', _docKeyHandler);
+            }
+
+            function closeInfoPopup() {
+                // Persist acknowledgement on first-visit close
+                if (_firstVisit) {
+                    localStorage.setItem('tcb_info_seen', '1');
+                    _firstVisit = false;
+                }
+                overlay.classList.remove('open');
+                document.body.classList.remove('popup-open');
+                if (_docKeyHandler) {
+                    document.removeEventListener('keydown', _docKeyHandler);
+                    _docKeyHandler = null;
+                }
+                setTimeout(function () {
+                    overlay.style.display = 'none';
+                    // Return focus to the icon
+                    if (infoIcon) infoIcon.focus();
+                }, 460);
+            }
+
+            // Outside-click dismisses only manual reopens, never first-visit
+            overlay.addEventListener('click', function (e) {
+                if (!_firstVisit && e.target === overlay) {
+                    closeInfoPopup();
+                }
+            });
+
+            beginBtn.addEventListener('click', closeInfoPopup);
+            infoIcon.addEventListener('click', function () { openInfoPopup(false); });
+
+            // Exposed so ban-end code can trigger it after defining
+            window._openInfoPopupIfNeeded = function () {
+                if (!localStorage.getItem('tcb_info_seen')) {
+                    openInfoPopup(true);
+                }
+            };
+        })();
+
+        /* ── BAN CHECK (runs after info popup is wired up) ── */
+        (function () {
+            var exp = parseInt(localStorage.getItem('ban_expires') || '0', 10);
+            if (Date.now() < exp) {
+                showBanOverlay(exp);
+                // Info popup intentionally suppressed — ban has priority
+            } else {
+                window._openInfoPopupIfNeeded();
+            }
         })();
 
         const routes = {
