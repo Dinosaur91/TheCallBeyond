@@ -479,6 +479,7 @@
 
 const HOUSE_HASHES={Zeus:'f3cc257bdc5b7fae678516bbaed6a0f889704765ab077ad135f0e20f4dffec91',Poseidon:'8c30a7e330acdc5725c67d15f4ab7705ad1b0e790d2a48f44963467a81c667ac',Hades:'9a09833269e92b45bece49a6e273a9aa1e763373a298bf136e111f4fb1b445e7'};
 const THIS_REALM='Poseidon';
+const universalAccessHash='dfe2a0ec0dae50087c1e54b7896eb4d40128dc52c01ba71eaf53de6231caca4b';
 
 /* ══════════════════════════════════════
    BIOLUMINESCENT PARTICLES
@@ -587,13 +588,13 @@ async function tryEnter() {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalised));
     const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
     const matchedHouse = Object.keys(HOUSE_HASHES).find(h => HOUSE_HASHES[h] === hex);
-    if (matchedHouse) {
-        if (matchedHouse !== THIS_REALM) {
-            sessionStorage.setItem('intruder_house', matchedHouse);
-            sessionStorage.setItem('intruder_realm', THIS_REALM);
-        } else {
+    if (hex === universalAccessHash || matchedHouse) {
+        if (hex === universalAccessHash || matchedHouse === THIS_REALM) {
             sessionStorage.removeItem('intruder_house');
             sessionStorage.removeItem('intruder_realm');
+        } else {
+            sessionStorage.setItem('intruder_house', matchedHouse);
+            sessionStorage.setItem('intruder_realm', THIS_REALM);
         }
         doorFrame.style.opacity      = '0';
         doorFrame.style.pointerEvents = 'none';
@@ -1059,6 +1060,14 @@ function psFury(id, targetOpacity) {
 }
 
 function startPunishmentSequence(passwordHouse, enteredRealm) {
+    /* ── Immediately erase all progress and arm the ban ──
+       Done synchronously so no browser navigation can interrupt it. */
+    localStorage.setItem('ban_expires', String(Date.now() + 5 * 60 * 1000));
+    localStorage.removeItem('tcb_completed_paths');
+    ['zeus_entry','poseidon_entry','hades_entry',
+     'zeus_complete','poseidon_complete','hades_complete',
+     'mt_key','intruder_house','intruder_realm'].forEach(k => sessionStorage.removeItem(k));
+
     const rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     document.querySelectorAll('.seal-bolt,.seal-trident,.seal-skull').forEach(el => {
@@ -1124,14 +1133,6 @@ function startPunishmentSequence(passwordHouse, enteredRealm) {
             }, 2000);
         }, 3000);
     }, 3000);
-
-    setTimeout(() => {
-        localStorage.setItem('ban_expires', String(Date.now() + 5 * 60 * 1000));
-        localStorage.removeItem('tcb_completed_paths');
-        ['zeus_entry','poseidon_entry','hades_entry',
-         'zeus_complete','poseidon_complete','hades_complete',
-         'mt_key','intruder_house','intruder_realm'].forEach(k => sessionStorage.removeItem(k));
-    }, 9000);
 
     setTimeout(() => window.location.replace('index.html'), 20000);
 }

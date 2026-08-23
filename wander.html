@@ -485,7 +485,101 @@
 
         /* ── TOUCH ── */
         #scene { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+        /* ── WILDCARD STATE CLASSES (applied by inline head script before first paint) ── */
+
+        /* Shared: 1 and 2-path cards are completely non-interactive */
+        html.wc-state-one #wildcardScreen,
+        html.wc-state-two #wildcardScreen { cursor: default; }
+
+        html.wc-state-one #cardContainer,
+        html.wc-state-two #cardContainer {
+            pointer-events: none !important;
+            cursor: default !important;
+        }
+
+        /* State: one path — very distant, very dim tease */
+        html.wc-state-one #cardContainer {
+            transform: scale(0.18);
+            transform-origin: center center;
+        }
+        html.wc-state-one #wildcardImg {
+            animation-name: wcFadeOne;
+            filter: blur(3.5px) brightness(0.22) drop-shadow(0 0 5px rgba(255,215,100,0.06));
+        }
+        @keyframes wcFadeOne {
+            from { opacity: 0; }
+            to   { opacity: 0.32; }
+        }
+
+        /* State: two paths — closer, slightly clearer */
+        html.wc-state-two #cardContainer {
+            transform: scale(0.33);
+            transform-origin: center center;
+        }
+        html.wc-state-two #wildcardImg {
+            animation-name: wcFadeTwo;
+            filter: blur(1.5px) brightness(0.38) drop-shadow(0 0 12px rgba(255,215,100,0.13));
+        }
+        @keyframes wcFadeTwo {
+            from { opacity: 0; }
+            to   { opacity: 0.54; }
+        }
+
+        /* ── AUDIO PROMPT (autoplay blocked on 1/2-path auto reveal) ── */
+        #audioPrompt {
+            display: none;
+            position: fixed;
+            bottom: 7%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.58rem, 1.1vw, 0.76rem);
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: rgba(255,240,200,0.45);
+            background: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            white-space: nowrap;
+            animation: breathe 3.2s ease-in-out infinite;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+            z-index: 10;
+            padding: 0.5rem 1rem;
+        }
+        @media (max-width: 600px) {
+            #audioPrompt {
+                font-size: 0.6rem;
+                letter-spacing: 0.22em;
+                white-space: normal;
+                text-align: center;
+                width: 80%;
+                left: 10%;
+                transform: none;
+            }
+        }
     </style>
+<script>
+/* Set wildcard state class before first paint — prevents any incorrect card flash */
+(function () {
+    try {
+        var raw   = localStorage.getItem('tcb_completed_paths');
+        var arr   = raw ? JSON.parse(raw) : [];
+        var valid = Array.isArray(arr)
+            ? arr.filter(function (p) { return p === 'zeus' || p === 'poseidon' || p === 'hades'; })
+            : [];
+        var cls = valid.length >= 3 ? 'wc-state-three'
+                : valid.length === 2 ? 'wc-state-two'
+                : 'wc-state-one';
+        document.documentElement.classList.add(cls);
+    } catch (e) {
+        document.documentElement.classList.add('wc-state-one');
+    }
+})();
+</script>
 </head>
 <body>
 
@@ -639,6 +733,9 @@
         <line x1="10" y1="46.5" x2="46" y2="46.5" stroke-width="0.9"/>
     </svg>
 </a>
+
+<!-- Understated prompt shown only when autoplay is blocked on 1/2-path direct reveal -->
+<button id="audioPrompt" aria-label="Begin">✦ BEGIN ✦</button>
 
 <script>
 /* ── ACCESS GATE ── */
@@ -960,6 +1057,7 @@
    WILDCARD GLOW + HOVER (JS-driven)
 ══════════════════════════════════════ */
 (function () {
+    if (!document.documentElement.classList.contains('wc-state-three')) return;
     const img       = document.getElementById('wildcardImg');
     const container = document.getElementById('cardContainer');
     let hovered      = false;
@@ -1008,49 +1106,82 @@
 })();
 
 /* ══════════════════════════════════════
-   WILDCARD CLICK → REVEAL + AUDIO
+   AUDIO + REVEAL
 ══════════════════════════════════════ */
 (function () {
-    const audio  = new Audio('Resources/WakeUp.mp3');
-    audio.loop   = true;
+    const audio = new Audio('Resources/WakeUp.mp3');
+    audio.loop  = true;
     window._bgAudio = audio; /* exposed so the return gate can fade audio before navigating */
-    const screen = document.getElementById('wildcardScreen');
 
     function scheduleQuote() {
-        /* 1. Quote at 14s (unchanged timing) */
+        /* 1. Quote at 14s */
         setTimeout(function () {
             document.getElementById('quoteText').classList.add('visible');
         }, 14000);
 
-        /* 2. Symbols after quote has fully appeared: 14s + 3.5s anim + 1.5s pause = 19s */
+        /* 2. Symbols: 14s + 3.5s anim + 1.5s pause = 19s */
         setTimeout(function () {
             if (window._revealSymbols) window._revealSymbols();
         }, 19000);
 
-        /* 3. Victory block after symbols: 19s + 2s anim + 1s buffer = 22s */
+        /* 3. Victory block: 19s + 2s anim + 1s buffer = 22s */
         setTimeout(function () {
             if (window._revealVictory) window._revealVictory();
         }, 22000);
 
-        /* 4. Return gate after all victory content settles: 22s + 2.5s anim + 0.5s = 25s */
+        /* 4. Return gate: 22s + 2.5s anim + 0.5s = 25s */
         setTimeout(function () {
             if (window._revealGate) window._revealGate();
         }, 25000);
     }
 
-    document.getElementById('cardContainer').addEventListener('click', function () {
-        document.getElementById('cardInner').classList.add('flipped');
+    if (document.documentElement.classList.contains('wc-state-three')) {
+        /* ── Three paths: existing wildcard card-flip flow ── */
+        const screen = document.getElementById('wildcardScreen');
+        document.getElementById('cardContainer').addEventListener('click', function () {
+            document.getElementById('cardInner').classList.add('flipped');
+            setTimeout(function () {
+                screen.style.opacity = '0';
+                screen.style.pointerEvents = 'none';
+                setTimeout(function () { screen.style.display = 'none'; }, 1800);
+            }, 900);
+            setTimeout(function () {
+                audio.play().then(scheduleQuote).catch(function () {});
+            }, 2000);
+        }, { once: true });
 
+    } else {
+        /* ── One or two paths: show distant tease for ~4s then auto-fade ── */
+        const screen = document.getElementById('wildcardScreen');
+        const prompt = document.getElementById('audioPrompt');
+
+        function startReveal() {
+            if (prompt) prompt.style.display = 'none';
+            scheduleQuote();
+        }
+
+        function attemptAudio() {
+            audio.play().then(startReveal).catch(function () {
+                /* Autoplay blocked — prompt appears in mountain scene once card screen is gone */
+                if (prompt) {
+                    prompt.style.display = 'block';
+                    prompt.addEventListener('click', function () {
+                        audio.play().catch(function () {}).then(startReveal);
+                    }, { once: true });
+                } else {
+                    startReveal();
+                }
+            });
+        }
+
+        /* Auto-fade the teaser card after ~4 s, start audio at the same moment */
         setTimeout(function () {
             screen.style.opacity = '0';
             screen.style.pointerEvents = 'none';
+            attemptAudio();
             setTimeout(function () { screen.style.display = 'none'; }, 1800);
-        }, 900);
-
-        setTimeout(function () {
-            audio.play().then(scheduleQuote).catch(function () {});
-        }, 2000);
-    }, { once: true });
+        }, 4000);
+    }
 })();
 </script>
 </body>
